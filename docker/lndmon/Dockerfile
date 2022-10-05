@@ -1,4 +1,4 @@
-FROM golang:1.14-alpine as builder
+FROM golang:1.19-alpine as builder
 
 ENV LNDMON_VERSION=v0.2.0
 

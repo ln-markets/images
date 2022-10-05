@@ -1,4 +1,4 @@
-FROM golang:1.18.2-alpine as taro
+FROM golang:1.19.2-alpine as taro
 
 ENV TARO_VERSION=v0.1.0-alpha
 ENV OS linux
