@@ -1,4 +1,4 @@
-FROM golang:1.18-alpine as builder
+FROM golang:1.19-alpine as builder
 
 ENV LIGHTNING_TERMINAL_VERSION=v0.8.0-alpha
 ENV GODEBUG netdns=cgo

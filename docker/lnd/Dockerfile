@@ -1,4 +1,4 @@
-FROM golang:1.18.2-alpine as builder
+FROM golang:1.19.2-alpine as builder
 
 ENV LND_VERSION=v0.15.1-beta
 ENV OS linux

@@ -1,4 +1,4 @@
-FROM golang:1.18.2-alpine as lnd
+FROM golang:1.19.2-alpine as lnd
 
 ENV LND_VERSION=latest
 ENV OS linux
