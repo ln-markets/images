@@ -1,0 +1,59 @@
+name: lightning-terminal
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - docker/lightning-terminal/**
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3.1.0
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Build X
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: vafanassieff
+          password: ${{ secrets.CR_PAT }}
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Get lightning terminal version
+        run: echo 'LIGHTNING_TERMINAL_VERSION='$(grep -m 1 'ARG LIGHTNING_TERMINAL_VERSION=' docker/lightning-terminal/Dockerfile | cut -f2- -d=) >> $GITHUB_ENV
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ghcr.io/ln-markets/lightning-terminal
+            lnmarkets/lightning-terminal
+          tags: |
+            type=raw,${{ env.LIGHTNING_TERMINAL_VERSION }}
+            type=sha
+
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v3
+        with:
+          context: docker/lightning-terminal
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
