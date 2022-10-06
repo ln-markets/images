@@ -2,7 +2,6 @@ FROM lncm/berkeleydb:v4.8.30.NC AS berkleydb
 
 FROM alpine:3.16 AS builder
 
-ARG CORE_COUNT=4
 ARG BITCOIN_VERSION=23.0
 
 WORKDIR /opt
@@ -54,7 +53,7 @@ RUN ./configure \
     --with-daemon \
     --with-zmq
 
-RUN make -j ${CORE_COUNT} check
+RUN make -j $(nproc) check
 
 RUN make install
 
@@ -72,12 +71,13 @@ RUN addgroup --system --gid 1000 bitcoin && \
 RUN apk add \
     boost-filesystem \
     boost-thread \
+    libevent \
     libsodium \
     libstdc++ \
     libzmq \
+    sqlite-libs \
     su-exec \
-    shadow \
-    sqlite-libs
+    shadow
 
 COPY entrypoint.sh /entrypoint.sh
 
