@@ -33,18 +33,6 @@ else
   echo "/taro user and group is good !"
 fi
 
-if [ ! -z "${BITCOIND_RPCPASS}" ] && [ -f $taro_CONF_PATH ] && grep -q BITCOIND_RPCPASS $taro_CONF_PATH; then
-  sed "s/BITCOIND_RPCPASS/$BITCOIND_RPCPASS/g" $taro_CONF_PATH > tmp.conf
-  cat tmp.conf > $taro_CONF_PATH
-  rm tmp.conf
-fi
-
-if [ ! -z "${TOR_PASSWORD}" ] && [ -f $taro_CONF_PATH ] && grep -q TOR_PASSWORD $taro_CONF_PATH; then
-  sed "s/TOR_PASSWORD/$TOR_PASSWORD/g" $taro_CONF_PATH > tmp.conf
-  cat tmp.conf > $taro_CONF_PATH
-  rm tmp.conf
-fi
-
 if [ "$1" = "taro" ] || [ "$1" = "lncli" ]; then
   exec su-exec taro "$@"
 else
