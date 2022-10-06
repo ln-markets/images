@@ -1,60 +1,27 @@
-FROM alpine:3.16 AS berkleydb
+FROM lncm/berkeleydb:v4.8.30.NC AS berkleydb
 
-# https://github.com/bitcoin/bitcoin/blob/master/contrib/install_db4.sh
-ARG CORE_COUNT=4
-
-ENV BERKLEY_DB_VERSION=4.8.30.NC
-ENV BERKLEY_DB_HASH=12edc0df75bf9abd7f82f821795bcee50f42cb2e5f76a6a281b85732798364ef
-
-RUN apk update && apk add \
-    autoconf \
-    automake \
-    libtool \
-    outils-sha256 \
-    build-base
-
-WORKDIR /opt
-
-RUN wget https://download.oracle.com/berkeley-db/db-${BERKLEY_DB_VERSION}.tar.gz
-RUN echo "${BERKLEY_DB_HASH} db-${BERKLEY_DB_VERSION}.tar.gz" | sha256 -c || exit 1
-RUN tar -xzf db-${BERKLEY_DB_VERSION}.tar.gz
-
-WORKDIR /opt/db-${BERKLEY_DB_VERSION}
-
-# https://gist.github.com/danieldk/5700533
-RUN sed s/__atomic_compare_exchange/__atomic_compare_exchange_db/g -i dbinc/atomic.h
-
-WORKDIR /opt/db-${BERKLEY_DB_VERSION}/build_unix
-
-RUN  ../dist/configure --enable-cxx --disable-shared --disable-replication --with-pic --prefix=/opt/berkleydb
-RUN make -j ${CORE_COUNT}
-RUN make install
-
-FROM alpine:3.16 AS bitcoin
+FROM alpine:3.16 AS builder
 
 ARG CORE_COUNT=4
 ARG BITCOIN_VERSION=23.0
 
 WORKDIR /opt
 
-COPY --from=berkleydb /opt/berkleydb /opt/berkleydb
+COPY --from=berkleydb /opt /opt
 
-RUN apk update && apk add \
-    make \
-    file \
+RUN apk add --no-cache \
     autoconf \
     automake \
-    build-base \
-    libtool \
-    boost-system \
-    boost-program_options \
-    boost-filesystem \
     boost-dev \
-    libressl-dev \ 
+    sqlite-dev \
+    build-base \
+    chrpath \
+    file \
     libevent-dev \
-    zeromq-dev  \
-    gnupg \
-    sqlite-dev
+    libressl \
+    libtool \
+    linux-headers \
+    zeromq-dev
 
 RUN wget https://bitcoincore.org/bin/bitcoin-core-${BITCOIN_VERSION}/bitcoin-${BITCOIN_VERSION}.tar.gz
 
@@ -66,21 +33,30 @@ RUN tar -xzf bitcoin-${BITCOIN_VERSION}.tar.gz
 
 WORKDIR /opt/bitcoin-${BITCOIN_VERSION}
 
-RUN ./autogen.sh && \
-    ./configure BDB_LIBS="-L/opt/berkleydb/lib -ldb_cxx-4.8" BDB_CFLAGS="-I/opt/berkleydb/include" \
+RUN ./autogen.sh
+    
+RUN ./configure \
+    BDB_LIBS="-L/opt/db4/lib -ldb_cxx-4.8" \
+    BDB_CFLAGS="-I/opt/db4/include" \
+    CXXFLAGS="-O2" \
     --prefix=/opt/build \
     --enable-hardening \
     --disable-tests \
     --disable-bench \
     --disable-ccache \
+    --disable-man \
+    --enable-static \
+    --enable-reduce-exports \
     --without-gui \
-    --without-miniupnpc \
+    --without-libs \
     --with-utils \
-    --with-libs \
+    --with-sqlite=yes \
     --with-daemon \
     --with-zmq
 
-RUN make -j ${CORE_COUNT} && make install
+RUN make -j ${CORE_COUNT} check
+
+RUN make install
 
 RUN strip /opt/build/bin/bitcoind && \
     strip /opt/build/bin/bitcoin-tx && \
@@ -88,25 +64,29 @@ RUN strip /opt/build/bin/bitcoind && \
 
 FROM alpine:3.16
 
-COPY --from=bitcoin /opt/build/bin/* /usr/local/bin/
+COPY --from=builder /opt/build/bin/* /bin/
 
 RUN addgroup --system --gid 1000 bitcoin && \
     adduser --system --home /bitcoin -G bitcoin --uid 1000 bitcoin
 
 RUN apk add \
-    boost \
-    libevent \
-    libressl \
+    boost-filesystem \
+    boost-thread \
+    libsodium \
+    libstdc++ \
     libzmq \
     su-exec \
     shadow \
-    sqlite
+    sqlite-libs
 
 COPY entrypoint.sh /entrypoint.sh
 
 VOLUME ["/bitcoin/.bitcoin"]
 
-EXPOSE 8332 8333 18332 18333 18444
+EXPOSE 8080
+EXPOSE 8333 18333 18444
+EXPOSE 8332 18332 18443
+EXPOSE 28332 28333
 
 ENTRYPOINT [ "/entrypoint.sh" ]
 

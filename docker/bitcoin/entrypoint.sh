@@ -2,8 +2,6 @@
 
 set -e
 
-BITCOIN_PATH=/bitcoin
-
 # Setup user/group ids
 if [ ! -z "${PUID}" ]; then
   if [ ! "$(id -u bitcoin)" -eq "${PUID}" ]; then
@@ -18,7 +16,7 @@ if [ ! -z "${PUID}" ]; then
     
     # Cleanup the temp home dir
     if [ ! "${PUID}" -eq 0 ]; then
-      usermod -d /$BITCOIN_PATH bitcoin
+      usermod -d /bitcoin bitcoin
       rm -Rf /tmp/temphome
     fi
   fi
@@ -30,8 +28,8 @@ if [ ! -z "${PGID}" ]; then
   fi
 fi
 
-if [ ! '$(stat -c %u "${BITCOIN_PATH}")' = "$(id -u bitcoin)" ]; then
-  chown -R bitcoin:bitcoin $BITCOIN_PATH
+if [ ! '$(stat -c %u "/bitcoin")' = "$(id -u bitcoin)" ]; then
+  chown -R bitcoin:bitcoin /bitcoin
 fi
 
 if [ "$1" = "bitcoind" ] || [ "$1" = "bitcoin-cli" ] || [ "$1" = "bitcoin-tx" ]; then
