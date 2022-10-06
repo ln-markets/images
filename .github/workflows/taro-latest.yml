@@ -1,4 +1,4 @@
-name: lnd-latest
+name: taro-latest
 
 on:
   workflow_dispatch:
@@ -31,30 +31,30 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Get latest lnd commit sha
+      - name: Get latest taro commit sha
         uses: sergeysova/jq-action@v2
         with:
-          cmd: echo 'LND_COMMIT='$(curl -s https://api.github.com/repos/lightningnetwork/lnd/commits/master | jq -r .sha) >> $GITHUB_ENV
+          cmd: echo 'TARO_COMMIT='$(curl -s https://api.github.com/repos/lightninglabs/taro/commits/main | jq -r .sha) >> $GITHUB_ENV
 
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v4
         with:
           images: |
-            ghcr.io/ln-markets/lnd
-            lnmarkets/lnd
+            ghcr.io/ln-markets/taro
+            lnmarkets/taro
           tags: |
             type=raw,latest
-            type=raw,commit-${{ env.LND_COMMIT }}
+            type=raw,commit-${{ env.TARO_COMMIT }}
             type=sha
 
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v3
         with:
-          context: docker/lnd
+          context: docker/taro
           platforms: linux/amd64,linux/arm64
-          build-args: LND_COMMIT=${{ env.LND_COMMIT }}
+          build-args: TARO_COMMIT=${{ env.TARO_COMMIT }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
