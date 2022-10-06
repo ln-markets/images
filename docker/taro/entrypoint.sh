@@ -29,8 +29,6 @@ fi
 
 if [ ! '$(stat -c %u "/taro")' = "$(id -u taro)" ]; then
   chown -R taro:taro /taro
-else
-  echo "/taro user and group is good !"
 fi
 
 if [ "$1" = "taro" ] || [ "$1" = "lncli" ]; then

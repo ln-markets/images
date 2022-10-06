@@ -29,8 +29,6 @@ fi
 
 if [ ! '$(stat -c %u "/lit")' = "$(id -u lit)" ]; then
   chown -R lit:lit /lit
-else
-  echo "/lit user and group is good !"
 fi
 
 if [ "$1" = "litd" ] || [ "$1" = "lit" ]; then

@@ -29,8 +29,6 @@ fi
 
 if [ ! '$(stat -c %u "/lnd")' = "$(id -u lnd)" ]; then
   chown -R lnd:lnd /lnd
-else
-  echo "/lnd user and group is good !"
 fi
 
 if [ ! -z "${BITCOIND_RPCPASS}" ] && [ -f $LND_CONF_PATH ] && grep -q BITCOIND_RPCPASS $LND_CONF_PATH; then
