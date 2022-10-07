@@ -15,7 +15,7 @@ if [ ! -z "${PUID}" ]; then
     
     # Cleanup the temp home dir
     if [ ! "${PUID}" -eq 0 ]; then
-      usermod -d /pool pool
+      usermod -d /home pool
       rm -Rf /tmp/temphome
     fi
   fi
@@ -27,8 +27,8 @@ if [ ! -z "${PGID}" ]; then
   fi
 fi
 
-if [ ! '$(stat -c %u "/pool")' = "$(id -u pool)" ]; then
-  chown -R pool:pool /pool
+if [ ! '$(stat -c %u "/home")' = "$(id -u pool)" ]; then
+  chown -R pool:pool /home
 fi
 
 if [ "$1" = "poold" ] || [ "$1" = "pool" ]; then

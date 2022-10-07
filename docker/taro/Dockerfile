@@ -26,8 +26,8 @@ RUN apk add --no-cache --update \
     su-exec \
     shadow
 
-RUN addgroup --system --gid 1000 taro
-RUN adduser taro --system --uid 1000 --home /taro -G taro
+RUN addgroup --system --gid 1000 taro && \
+    adduser taro -G taro --system --home /home --uid 1000
 
 COPY ./entrypoint.sh /entrypoint.sh
 

@@ -8,8 +8,8 @@ RUN apk add --no-cache --update \
     su-exec \
     shadow
 
-RUN addgroup --system --gid 1000 tor
-RUN adduser toruser --system --uid 1000 -G tor --home /home
+RUN addgroup --system --gid 1000 tor && \
+    adduser toruser -G bitcoin --system --home /home --uid 1000
 
 COPY entrypoint.sh /entrypoint.sh
 

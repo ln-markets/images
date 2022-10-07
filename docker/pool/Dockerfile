@@ -33,8 +33,8 @@ RUN apk --no-cache add \
     su-exec \
     shadow
 
-RUN addgroup --system --gid 1000 pool
-RUN adduser pool --system --uid 1000 --home /pool -G pool
+RUN addgroup --system --gid 1000 pool && \
+    adduser pool -G pool --system --home /home --uid 1000
 
 COPY ./entrypoint.sh /entrypoint.sh
 

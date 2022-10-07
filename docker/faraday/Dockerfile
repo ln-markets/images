@@ -33,8 +33,8 @@ RUN apk --no-cache add \
     su-exec \
     shadow
 
-RUN addgroup --system --gid 1000 faraday
-RUN adduser faraday --system --uid 1000 --home /faraday -G faraday
+RUN addgroup --system --gid 1000 faraday && \
+    adduser faraday -G faraday --system --home /home --uid 1000
 
 COPY ./entrypoint.sh /entrypoint.sh
 

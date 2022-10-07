@@ -33,8 +33,8 @@ RUN apk --no-cache add \
     su-exec \
     shadow
 
-RUN addgroup --system --gid 1000 loop
-RUN adduser loop --system --uid 1000 --home /loop -G loop
+RUN addgroup --system --gid 1000 loop && \
+    adduser loop -G loop --system --home /home --uid 1000
 
 COPY ./entrypoint.sh /entrypoint.sh
 

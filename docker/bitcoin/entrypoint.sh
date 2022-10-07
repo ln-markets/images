@@ -16,7 +16,7 @@ if [ ! -z "${PUID}" ]; then
     
     # Cleanup the temp home dir
     if [ ! "${PUID}" -eq 0 ]; then
-      usermod -d /bitcoin bitcoin
+      usermod -d /home bitcoin
       rm -Rf /tmp/temphome
     fi
   fi
@@ -28,8 +28,8 @@ if [ ! -z "${PGID}" ]; then
   fi
 fi
 
-if [ ! '$(stat -c %u "/bitcoin")' = "$(id -u bitcoin)" ]; then
-  chown -R bitcoin:bitcoin /bitcoin
+if [ ! '$(stat -c %u "/home")' = "$(id -u bitcoin)" ]; then
+  chown -R bitcoin:bitcoin /home
 fi
 
 if [ "$1" = "bitcoind" ] || [ "$1" = "bitcoin-cli" ] || [ "$1" = "bitcoin-tx" ]; then

@@ -15,7 +15,7 @@ if [ ! -z "${PUID}" ]; then
     
     # Cleanup the temp home dir
     if [ ! "${PUID}" -eq 0 ]; then
-      usermod -d /taro taro
+      usermod -d /home taro
       rm -Rf /tmp/temphome
     fi
   fi
@@ -27,8 +27,8 @@ if [ ! -z "${PGID}" ]; then
   fi
 fi
 
-if [ ! '$(stat -c %u "/taro")' = "$(id -u taro)" ]; then
-  chown -R taro:taro /taro
+if [ ! '$(stat -c %u "/home")' = "$(id -u taro)" ]; then
+  chown -R taro:taro /home
 fi
 
 if [ "$1" = "taro" ] || [ "$1" = "lncli" ]; then

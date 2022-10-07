@@ -15,7 +15,7 @@ if [ ! -z "${PUID}" ]; then
     
     # Cleanup the temp home dir
     if [ ! "${PUID}" -eq 0 ]; then
-      usermod -d /lit lit
+      usermod -d /home lit
       rm -Rf /tmp/temphome
     fi
   fi
@@ -27,8 +27,8 @@ if [ ! -z "${PGID}" ]; then
   fi
 fi
 
-if [ ! '$(stat -c %u "/lit")' = "$(id -u lit)" ]; then
-  chown -R lit:lit /lit
+if [ ! '$(stat -c %u "/home")' = "$(id -u lit)" ]; then
+  chown -R lit:lit /home
 fi
 
 if [ "$1" = "litd" ] || [ "$1" = "lit" ]; then

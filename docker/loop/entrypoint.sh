@@ -15,7 +15,7 @@ if [ ! -z "${PUID}" ]; then
     
     # Cleanup the temp home dir
     if [ ! "${PUID}" -eq 0 ]; then
-      usermod -d /loop loop
+      usermod -d /home loop
       rm -Rf /tmp/temphome
     fi
   fi
@@ -27,8 +27,8 @@ if [ ! -z "${PGID}" ]; then
   fi
 fi
 
-if [ ! '$(stat -c %u "/loop")' = "$(id -u loop)" ]; then
-  chown -R loop:loop /loop
+if [ ! '$(stat -c %u "/home")' = "$(id -u loop)" ]; then
+  chown -R loop:loop /home
 fi
 
 if [ "$1" = "loopd" ] || [ "$1" = "loop" ]; then

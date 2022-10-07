@@ -15,7 +15,7 @@ if [ ! -z "${PUID}" ]; then
     
     # Cleanup the temp home dir
     if [ ! "${PUID}" -eq 0 ]; then
-      usermod -d /lndmon lndmon
+      usermod -d /home lndmon
       rm -Rf /tmp/temphome
     fi
   fi
@@ -27,10 +27,8 @@ if [ ! -z "${PGID}" ]; then
   fi
 fi
 
-if [ ! '$(stat -c %u "/lndmon")' = "$(id -u lndmon)" ]; then
-  chown -R lndmon:lndmon /lndmon
-else
-  echo "/lndmon user and group is good !"
+if [ ! '$(stat -c %u "/home")' = "$(id -u lndmon)" ]; then
+  chown -R lndmon:lndmon /home
 fi
 
 if [ "$1" = "lndmon" ]; then

@@ -23,6 +23,16 @@ if [ ! -z "${PUID}" ]; then
   fi
 fi
 
+if [ ! -z "${PGID}" ]; then
+  if [ ! "$(id -g tor)" -eq "${PGID}" ]; then
+    groupmod -o -g "${PGID}" tor
+  fi
+fi
+
+if [ ! '$(stat -c %u "/home")' = "$(id -u tor)" ]; then
+  chown -R tor:tor /home
+fi
+
 if [ $1 = "tor" ];then
     if [ ! "$ENV_CONFIG" ]; then
       echo "Deleting default torrc"

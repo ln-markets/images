@@ -15,7 +15,7 @@ if [ ! -z "${PUID}" ]; then
     
     # Cleanup the temp home dir
     if [ ! "${PUID}" -eq 0 ]; then
-      usermod -d /faraday faraday
+      usermod -d /home faraday
       rm -Rf /tmp/temphome
     fi
   fi
@@ -27,8 +27,8 @@ if [ ! -z "${PGID}" ]; then
   fi
 fi
 
-if [ ! '$(stat -c %u "/faraday")' = "$(id -u faraday)" ]; then
-  chown -R faraday:faraday /faraday
+if [ ! '$(stat -c %u "/home")' = "$(id -u faraday)" ]; then
+  chown -R faraday:faraday /home
 fi
 
 if [ "$1" = "faraday" ] || [ "$1" = "frcli" ]; then

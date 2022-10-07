@@ -15,7 +15,7 @@ if [ ! -z "${PUID}" ]; then
     
     # Cleanup the temp home dir
     if [ ! "${PUID}" -eq 0 ]; then
-      usermod -d /lnd lnd
+      usermod -d /home lnd
       rm -Rf /tmp/temphome
     fi
   fi
@@ -27,8 +27,8 @@ if [ ! -z "${PGID}" ]; then
   fi
 fi
 
-if [ ! '$(stat -c %u "/lnd")' = "$(id -u lnd)" ]; then
-  chown -R lnd:lnd /lnd
+if [ ! '$(stat -c %u "/home")' = "$(id -u lnd)" ]; then
+  chown -R lnd:lnd /home
 fi
 
 if [ ! -z "${BITCOIND_RPCPASS}" ] && [ -f $LND_CONF_PATH ] && grep -q BITCOIND_RPCPASS $LND_CONF_PATH; then

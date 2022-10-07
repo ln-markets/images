@@ -1,4 +1,4 @@
-FROM golang:1.18-alpine AS builder
+FROM golang:1.19-alpine AS builder
 
 ARG LIGHTNING_TERMINAL_VERSION=v0.8.0-alpha
 
@@ -36,8 +36,8 @@ RUN apk --no-cache add \
     su-exec \
     shadow
 
-RUN addgroup --system --gid 1000 lit
-RUN adduser lit --system --uid 1000 --home /lit -G lit
+RUN addgroup --system --gid 1000 lit && \
+    adduser lit -G lit --system --home /home --uid 1000
 
 COPY entrypoint.sh /entrypoint.sh
 

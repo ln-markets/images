@@ -18,3 +18,7 @@ By changing them variables you will also change the owner on the app files
 |------|---------------------------------------|
 | PUID | Set the user id running the app       |
 | PGID | Set the user group id running the app |
+
+All the containers create a user with default user id of *1000* and default group id of *1000*
+
+All default user home is set to `/home` to ease the use of volumes and mapping

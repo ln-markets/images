@@ -66,7 +66,7 @@ FROM alpine:3.16
 COPY --from=builder /opt/build/bin/* /bin/
 
 RUN addgroup --system --gid 1000 bitcoin && \
-    adduser --system --home /bitcoin -G bitcoin --uid 1000 bitcoin
+    adduser bitcoin -G bitcoin --system --home /home --uid 1000
 
 RUN apk add --no-cache --update \
     boost-filesystem \
