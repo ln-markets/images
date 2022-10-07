@@ -9,7 +9,7 @@ RUN apk add --no-cache --update \
     shadow
 
 RUN addgroup --system --gid 1000 tor && \
-    adduser toruser -G bitcoin --system --home /home --uid 1000
+    adduser toruser -G tor --system --home /home --uid 1000
 
 COPY entrypoint.sh /entrypoint.sh
 
