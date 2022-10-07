@@ -42,8 +42,6 @@ COPY ./entrypoint.sh /entrypoint.sh
 
 EXPOSE 9735 9911 10009 8080
 
-VOLUME ["/lnd/.lnd"]
-
 ENTRYPOINT [ "/entrypoint.sh" ]
 
 CMD ["lnd"]

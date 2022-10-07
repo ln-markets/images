@@ -33,8 +33,6 @@ COPY ./entrypoint.sh /entrypoint.sh
 
 EXPOSE 10029 8089
 
-VOLUME ["/taro/.taro"]
-
 ENTRYPOINT [ "/entrypoint.sh" ]
 
 CMD ["tarod"]

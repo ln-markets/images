@@ -81,8 +81,6 @@ RUN apk add --no-cache --update \
 
 COPY entrypoint.sh /entrypoint.sh
 
-VOLUME ["/bitcoin/.bitcoin"]
-
 EXPOSE 8080
 EXPOSE 8333 18333 18444
 EXPOSE 8332 18332 18443
