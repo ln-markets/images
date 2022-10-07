@@ -68,7 +68,7 @@ COPY --from=builder /opt/build/bin/* /bin/
 RUN addgroup --system --gid 1000 bitcoin && \
     adduser --system --home /bitcoin -G bitcoin --uid 1000 bitcoin
 
-RUN apk add \
+RUN apk add --no-cache --update \
     boost-filesystem \
     boost-thread \
     libevent \

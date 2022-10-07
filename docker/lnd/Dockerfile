@@ -31,7 +31,7 @@ ENV LND_CONF_PATH=/lnd/.lnd/lnd.conf
 COPY --from=builder /go/bin/lncli /bin/
 COPY --from=builder /go/bin/lnd /bin/
 
-RUN apk add \
+RUN apk add --no-cache --update \
     su-exec \
     shadow
 
