@@ -1,34 +1,20 @@
-![Bitcoin](https://github.com/vafanassieff/crypto-docker/actions/workflows/bitcoin.yml/badge.svg)
-![LND](https://github.com/vafanassieff/crypto-docker/actions/workflows/lnd.yml/badge.svg)
-![lndmon](https://github.com/vafanassieff/crypto-docker/actions/workflows/lndmon.yml/badge.svg)
-![tor](https://github.com/vafanassieff/crypto-docker/actions/workflows/tor.yml/badge.svg)
+# LN Markets Containers
 
-# crypto-docker
-
-Everything you need to get started with crypto currencies and docker !
+All the bitcoin and lightning containers used by [LN Markets](https://alpinelinux.org/)
 
 ## Introduction
 
-All images that i build are based on [Alpine Linux](https://alpinelinux.org/).
+All images built are based on [Alpine Linux](https://alpinelinux.org/)
 
-The different Dockerfile and script can be found in their folder, you can find example [here](example)
+Every image run the app as a non root user, you can also set the user id and group id who will run the image and map it to your needs.
 
-Every image run the process as a non root user, you can also set the user id and group id who will run the image and map it to your host if needed.
+## Configuration
 
-## General Usage
+`PUID` and `PGID` are common to all containers
 
-Will be rewritten soon see example
+By changing them variables you will also change the owner on the app files
 
-## Bitcoin
-
-Will be rewritten soon see example
-
-## LND
-
-Will be rewritten soon see example
-
-## License
-
-[License information](https://github.com/bitcoin/bitcoin/blob/master/COPYING) for bitcoin.
-
-[License information](https://github.com/vafanassieff/crypto-docker/blob/master/LICENSE) for this repository.
+| Name | Description                           |
+|------|---------------------------------------|
+| PUID | Set the user id running the app       |
+| PGID | Set the user group id running the app |

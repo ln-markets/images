@@ -29,8 +29,6 @@ fi
 
 if [ ! '$(stat -c %u "/faraday")' = "$(id -u faraday)" ]; then
   chown -R faraday:faraday /faraday
-else
-  echo "/faraday user and group is good !"
 fi
 
 if [ "$1" = "faraday" ] || [ "$1" = "frcli" ]; then

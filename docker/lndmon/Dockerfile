@@ -1,36 +1,29 @@
-FROM golang:1.14-alpine AS builder
+FROM golang:1.19-alpine AS builder
 
-ENV LNDMON_VERSION=v0.2.0
+ARG LNDMON_VERSION=v0.2.1
+ARG LNDMON_COMMIT
 
-RUN apk add --no-cache git gcc musl-dev
-
-RUN apk add --no-cache --update alpine-sdk \
-    git \
-    make \
-    bash \
-    gcc
-
-WORKDIR /opt
-
-RUN git clone https://github.com/lightninglabs/lndmon.git && \
-    cd lndmon && \
-    git checkout tags/$LNDMON_VERSION
-
+ENV GODEBUG netdns=cgo
 ENV GO111MODULE on
 
-RUN cd lndmon/cmd/lndmon && go build
+ENV LNDMON_PKG_DIR="/go/src/github.com/lightninglabs/lndmon/"
 
-FROM alpine:3.16 AS final
+RUN apk add --no-cache --update \
+    git \
+    make \
+    bash
 
-LABEL maintainer="victor@lnmarkets.com"
+RUN git clone https://github.com/lightninglabs/lndmon.git ${LNDMON_PKG_DIR} && \
+    cd ${LNDMON_PKG_DIR} && \
+    if [[ -z "$LNDMON_COMMIT" ]] ; then git checkout ${LNDMON_VERSION} ; else git checkout ${LNDMON_COMMIT} ; fi
 
-COPY --from=builder /opt/lndmon/cmd/lndmon/lndmon /bin/
+RUN cd ${LNDMON_PKG_DIR}/cmd/lndmon && go build
 
-RUN chmod +x /bin/lndmon
+FROM alpine:3.16
+
+COPY --from=builder /go/src/github.com/lightninglabs/lndmon/cmd/lndmon /bin/
 
 RUN apk --no-cache add \
-    busybox \
-    iputils \
     su-exec \
     shadow
 

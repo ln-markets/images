@@ -29,8 +29,6 @@ fi
 
 if [ ! '$(stat -c %u "/loop")' = "$(id -u loop)" ]; then
   chown -R loop:loop /loop
-else
-  echo "/loop user and group is good !"
 fi
 
 if [ "$1" = "loopd" ] || [ "$1" = "loop" ]; then

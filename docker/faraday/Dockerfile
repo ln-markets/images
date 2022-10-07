@@ -1,36 +1,37 @@
-FROM alpine:3.16 AS builder
+FROM golang:1.19-alpine AS builder
 
-ENV FARADAY_VERSION=v0.2.8-alpha
+ARG FARADAY_VERSION=v0.2.8-alpha
+ARG FARADAY_COMMIT
 
-WORKDIR /opt
+ENV FARADAY_PKG_DIR="/go/src/github.com/lightninglabs/faraday"
 
-RUN apk --no-cache add \
-    bash \
-    ca-certificates \
+ENV GODEBUG netdns=cgo
+ENV GO111MODULE on
+
+RUN apk add --no-cache --update \
     gnupg \
-    perl-utils
+    make \
+    git
 
-RUN wget https://github.com/lightninglabs/faraday/releases/download/${FARADAY_VERSION}/faraday-linux-amd64-${FARADAY_VERSION}.tar.gz
-RUN wget https://github.com/lightninglabs/faraday/releases/download/${FARADAY_VERSION}/manifest-${FARADAY_VERSION}.txt
-RUN wget https://github.com/lightninglabs/faraday/releases/download/${FARADAY_VERSION}/manifest-${FARADAY_VERSION}.sig
+RUN git clone https://github.com/lightninglabs/faraday.git ${FARADAY_PKG_DIR} && \
+    cd ${FARADAY_PKG_DIR}  && \
+    if [[ -z "$FARADAY_COMMIT" ]] ; then git checkout ${FARADAY_VERSION} ; else git checkout ${FARADAY_COMMIT} ; fi
+
 
 RUN gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys F4FC70F07310028424EFC20A8E4256593F177720 && \
-    gpg --verify manifest-${FARADAY_VERSION}.sig manifest-${FARADAY_VERSION}.txt && \
-    cat  manifest-${FARADAY_VERSION}.txt | grep -q "$(shasum -a 256 faraday-linux-amd64-${FARADAY_VERSION}.tar.gz)"
+    cd ${FARADAY_PKG_DIR}  && \
+    if [[ -z "$FARADAY_COMMIT" ]] ; then git verify-tag ${FARADAY_VERSION} ; fi
 
-RUN tar -xvzf faraday-linux-amd64-${FARADAY_VERSION}.tar.gz
+RUN cd ${FARADAY_PKG_DIR} && make install
 
-FROM alpine:3.16 AS final
+FROM alpine:3.16
 
-ENV FARADAY_VERSION=v0.2.8-alpha
-
-COPY --from=builder /opt/faraday-linux-amd64-${FARADAY_VERSION}/faraday /usr/local/bin/faraday
-COPY --from=builder /opt/faraday-linux-amd64-${FARADAY_VERSION}/frcli /usr/local/bin/frcli
+COPY --from=builder /go/bin/faraday /bin/
+COPY --from=builder /go/bin/frcli /bin/
 
 RUN apk --no-cache add \
     su-exec \
-    shadow \
-    libc6-compat
+    shadow
 
 RUN addgroup --system --gid 1000 faraday
 RUN adduser faraday --system --uid 1000 --home /faraday -G faraday

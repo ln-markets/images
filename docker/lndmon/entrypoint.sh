@@ -27,7 +27,7 @@ if [ ! -z "${PGID}" ]; then
   fi
 fi
 
-if [ ! '$(stat -c %u "/lnd")' = "$(id -u lndmon)" ]; then
+if [ ! '$(stat -c %u "/lndmon")' = "$(id -u lndmon)" ]; then
   chown -R lndmon:lndmon /lndmon
 else
   echo "/lndmon user and group is good !"

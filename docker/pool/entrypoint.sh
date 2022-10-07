@@ -29,8 +29,6 @@ fi
 
 if [ ! '$(stat -c %u "/pool")' = "$(id -u pool)" ]; then
   chown -R pool:pool /pool
-else
-  echo "/pool user and group is good !"
 fi
 
 if [ "$1" = "poold" ] || [ "$1" = "pool" ]; then

@@ -1,29 +1,33 @@
-FROM alpine:3.16 AS builder
+FROM golang:1.19-alpine AS builder
 
-ENV LOOP_VERSION=v0.20.1-beta
+ARG LOOP_VERSION=v0.20.1-beta
+ARG LOOP_COMMIT
 
-WORKDIR /opt
+ENV LOOP_PKG_DIR="/go/src/github.com/lightninglabs/loop"
 
-RUN apk --no-cache add \
-    bash \
-    ca-certificates \
+ENV GODEBUG netdns=cgo
+ENV GO111MODULE on
+
+RUN apk add --no-cache --update \
     gnupg \
-    perl-utils
+    make \
+    git
 
-RUN wget https://github.com/lightninglabs/loop/releases/download/${LOOP_VERSION}/loop-linux-amd64-${LOOP_VERSION}.tar.gz
-RUN wget https://github.com/lightninglabs/loop/releases/download/${LOOP_VERSION}/manifest-${LOOP_VERSION}.txt
-RUN wget https://github.com/lightninglabs/loop/releases/download/${LOOP_VERSION}/manifest-${LOOP_VERSION}.txt.sig
+RUN git clone https://github.com/lightninglabs/loop.git ${LOOP_PKG_DIR} && \
+    cd ${LOOP_PKG_DIR}  && \
+    if [[ -z "$LOOP_COMMIT" ]] ; then git checkout ${LOOP_VERSION} ; else git checkout ${LOOP_COMMIT} ; fi
 
-RUN gpg  --keyserver hkps://keyserver.ubuntu.com --recv-keys DE23E73BFA8A0AD5587D2FCDE80D2F3F311FD87E && \
-    gpg --verify manifest-${LOOP_VERSION}.txt.sig manifest-${LOOP_VERSION}.txt && \
-    cat  manifest-${LOOP_VERSION}.txt | grep -q "$(shasum -a 256 loop-linux-amd64-${LOOP_VERSION}.tar.gz)"
+# Key is expired
+# RUN gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys DE23E73BFA8A0AD5587D2FCDE80D2F3F311FD87E && \
+#     cd ${LOOP_PKG_DIR}  && \
+#     if [[ -z "$LOOP_COMMIT" ]] ; then git verify-tag ${LOOP_VERSION} ; fi
 
-RUN tar -xvzf loop-linux-amd64-${LOOP_VERSION}.tar.gz
+RUN cd ${LOOP_PKG_DIR} && make install
 
-FROM alpine:3.16 AS final
+FROM alpine:3.16
 
-COPY --from=builder /opt/loop-linux-amd64-${LOOP_VERSION}/loop /usr/local/bin/
-COPY --from=builder /opt/loop-linux-amd64-${LOOP_VERSION}/loopd /usr/local/bin/
+COPY --from=builder /go/bin/loop /bin/
+COPY --from=builder /go/bin/loopd /bin/
 
 RUN apk --no-cache add \
     su-exec \
@@ -34,7 +38,7 @@ RUN adduser loop --system --uid 1000 --home /loop -G loop
 
 COPY ./entrypoint.sh /entrypoint.sh
 
-EXPOSE 12010 8281
+EXPOSE 8081 11010
 
 ENTRYPOINT [ "/entrypoint.sh" ]
 

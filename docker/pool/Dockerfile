@@ -1,30 +1,33 @@
-FROM alpine:3.16 AS builder
+FROM golang:1.19-alpine AS builder
 
-ENV POOL_VERSION=v0.5.7-alpha
+ARG POOL_VERSION=v0.5.8-alpha
+ARG POOL_COMMIT
 
-WORKDIR /opt
+ENV POOL_PKG_DIR="/go/src/github.com/lightninglabs/pool"
 
-RUN apk --no-cache add \
-    bash \
-    ca-certificates \
+ENV GODEBUG netdns=cgo
+ENV GO111MODULE on
+
+RUN apk add --no-cache --update \
     gnupg \
-    perl-utils
+    make \
+    git
 
-RUN wget https://github.com/lightninglabs/pool/releases/download/${POOL_VERSION}/pool-linux-amd64-${POOL_VERSION}.tar.gz
-RUN wget https://github.com/lightninglabs/pool/releases/download/${POOL_VERSION}/manifest-${POOL_VERSION}.txt
-RUN wget https://github.com/lightninglabs/pool/releases/download/${POOL_VERSION}/manifest-${POOL_VERSION}.sig
+RUN git clone https://github.com/lightninglabs/pool.git ${POOL_PKG_DIR} && \
+    cd ${POOL_PKG_DIR}  && \
+    if [[ -z "$POOL_COMMIT" ]] ; then git checkout ${POOL_VERSION} ; else git checkout ${POOL_COMMIT} ; fi
+
 
 RUN gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys F4FC70F07310028424EFC20A8E4256593F177720 && \
-    gpg --verify manifest-${POOL_VERSION}.sig manifest-${POOL_VERSION}.txt && \
-    cat  manifest-${POOL_VERSION}.txt | grep -q "$(shasum -a 256 pool-linux-amd64-${POOL_VERSION}.tar.gz)"
+    cd ${POOL_PKG_DIR}  && \
+    if [[ -z "$POOL_COMMIT" ]] ; then git verify-tag ${POOL_VERSION} ; fi
 
-RUN tar -xvzf pool-linux-amd64-${POOL_VERSION}.tar.gz
+RUN cd ${POOL_PKG_DIR} && make install
 
-FROM alpine:3.16 AS final
+FROM alpine:3.16
 
-
-COPY --from=builder /opt/pool-linux-amd64-${POOL_VERSION}/pool /usr/local/bin/
-COPY --from=builder /opt/pool-linux-amd64-${POOL_VERSION}/poold /usr/local/bin/
+COPY --from=builder /go/bin/pool /bin/
+COPY --from=builder /go/bin/poold /bin/
 
 RUN apk --no-cache add \
     su-exec \
