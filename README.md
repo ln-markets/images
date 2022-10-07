@@ -1,6 +1,6 @@
-# LN Markets Containers
+# LN Markets Images
 
-All the bitcoin and lightning containers used by [LN Markets](https://alpinelinux.org/)
+All the Bitcoin and lightning images used by [LN Markets](https://alpinelinux.org/)
 
 ## Introduction
 
@@ -10,15 +10,15 @@ Every image run the app as a non root user, you can also set the user id and gro
 
 ## Configuration
 
-`PUID` and `PGID` are common to all containers
+`PUID` and `PGID` are common to all images
 
 By changing them variables you will also change the owner on the app files
 
 | Name | Description                           |
-|------|---------------------------------------|
+| ---- | ------------------------------------- |
 | PUID | Set the user id running the app       |
 | PGID | Set the user group id running the app |
 
-All the containers create a user with default user id of *1000* and default group id of *1000*
+All the images create a user with default user id of _1000_ and default group id of _1000_
 
 All default user home is set to `/home` to ease the use of volumes and mapping

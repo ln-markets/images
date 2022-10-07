@@ -25,6 +25,7 @@ dnsseed=0
 upnp=0
 zmqpubrawblock=tcp://0.0.0.0:28334
 zmqpubrawtx=tcp://0.0.0.0:28335
+fallbackfee=0.0002
 
 [regtest]
 rpcbind=0.0.0.0
