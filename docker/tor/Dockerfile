@@ -1,17 +1,17 @@
 FROM alpine:3.16
 
-ENV CONF_PATH=/etc/tor/torrc
+ARG TOR_VERSION=0.4.7.10-r0
 
-RUN apk update && \
-    apk add tor su-exec shadow \
-    bash
+RUN apk add --no-cache --update \
+    tor=${TOR_VERSION} \
+    bash \
+    su-exec \
+    shadow
 
-RUN addgroup --system tor && \
-    addgroup tor tor && \
-    userdel guest && \
-    groupdel users
+RUN addgroup --system --gid 1000 tor
+RUN adduser toruser --system --uid 1000 -G tor --home /home
 
-COPY ./entrypoint.sh /entrypoint.sh
+COPY entrypoint.sh /entrypoint.sh
 
 EXPOSE 9050 9051
 
