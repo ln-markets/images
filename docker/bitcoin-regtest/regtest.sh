@@ -2,7 +2,7 @@
 
 set -e
 
-BITCOIN_CONF_FILE=/home/.bitcoin/home.conf
+BITCOIN_CONF_FILE=/home/.bitcoin/bitcoin.conf
 
 mkdir -p /home/.bitcoin/
 touch ${BITCOIN_CONF_FILE}
@@ -10,21 +10,19 @@ touch ${BITCOIN_CONF_FILE}
 cat > /home/mine.sh << 'EOF'
 #! /usr/bin/env bash
 
-    if [ -a /home/satoshi ]; then
-        bitcoin-cli -regtest generatetoaddress 1 $(cat /home/satoshi)
-    fi
+if [ -a /home/satoshi ]; then
+    bitcoin-cli -regtest generatetoaddress 1 $(cat /home/satoshi)
+fi
 EOF
 
 cat >${BITCOIN_CONF_FILE} << 'EOF'
 server=1
 regtest=1
-listenonion=0
 txindex=1
+listen=1
+listenonion=0
 dnsseed=0
 upnp=0
-listen=1
-logtimestamps=0
-fallbackfee=0.0002
 zmqpubrawblock=tcp://0.0.0.0:28334
 zmqpubrawtx=tcp://0.0.0.0:28335
 
@@ -52,20 +50,21 @@ crond -b
 create_and_load_wallet() {
     # Sleep because we have to wait for bitcoind to start
     sleep 2
-    if [ ! -a /home/.bitcoin/regtest/wallets/lnmarkets/wallet.dat ]; then
+    if [ ! -a /home/.bitcoin/regtest/wallets/satoshi/wallet.dat ]; then
         echo 'Create default wallet'
-        su-exec bitcoin bash -c "bitcoin-cli -regtest createwallet lnmarkets"
+        su-exec bitcoin bash -c "bitcoin-cli -regtest createwallet satoshi"
     fi
 
-    su-exec bitcoin bash -c "bitcoin-cli -regtest loadwallet lnmarkets 2>/dev/null" | true
+    su-exec bitcoin bash -c "bitcoin-cli -regtest loadwallet satoshi 2>/dev/null" | true
 
+    # Create one address for the wallet where all coins will be mined
     if [ ! -a /home/satoshi ]; then
         echo 'Create satoshi address'
         su-exec bitcoin bash -c "bitcoin-cli -regtest getnewaddress > /home/satoshi"
     fi
 }
 
+# Run create_and_load_wallet in background 
 create_and_load_wallet &
 
-# Start bitcoind
-su-exec bitcoin bitcoind -conf=${BITCOIN_CONF_FILE}
+su-exec bitcoin bitcoind
