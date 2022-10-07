@@ -33,7 +33,7 @@ RUN tar -xzf bitcoin-${BITCOIN_VERSION}.tar.gz
 WORKDIR /opt/bitcoin-${BITCOIN_VERSION}
 
 RUN ./autogen.sh
-    
+
 RUN ./configure \
     BDB_LIBS="-L/opt/db4/lib -ldb_cxx-4.8" \
     BDB_CFLAGS="-I/opt/db4/include" \
@@ -65,8 +65,8 @@ FROM alpine:3.16
 
 COPY --from=builder /opt/build/bin/* /bin/
 
-RUN addgroup --system --gid 1000 bitcoin && \
-    adduser bitcoin -G bitcoin --system --home /home --uid 1000
+RUN addgroup --system --gid 1000 satoshi && \
+    adduser satoshi -G satoshi --system --home /home --uid 1000
 
 RUN apk add --no-cache --update \
     boost-filesystem \
