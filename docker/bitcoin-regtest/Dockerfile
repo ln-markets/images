@@ -7,7 +7,7 @@ RUN apk add --update --no-cache \
     bash \
     libcap
 
-RUN chown bitcoin:bitcoin /usr/sbin/crond \
+RUN chown satoshi:satoshi /usr/sbin/crond \
     && setcap cap_setgid=ep /usr/sbin/crond
 
 COPY ./regtest.sh ./scripts/regtest.sh
