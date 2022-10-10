@@ -7,7 +7,6 @@ on:
       - master
     paths:
       - docker/lightning-terminal/**
-      - scripts/**
 
 jobs:
   build:

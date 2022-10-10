@@ -1,39 +1,58 @@
-FROM golang:1.19-alpine AS builder
+FROM alpine AS git
 
 ARG LIGHTNING_TERMINAL_VERSION=v0.8.0-alpha
+
+ENV LIT_PKG_DIR="/go/src/github.com/lightninglabs/lightning-terminal"
+
+RUN apk add --no-cache --update \
+    git \
+    gnupg 
+
+RUN gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys 26984CB69EB8C4A26196F7A4D7D916376026F177 && \
+    git clone https://github.com/lightninglabs/lightning-terminal.git ${LIT_PKG_DIR} && \
+    cd ${LIT_PKG_DIR} && \
+    git checkout ${LIGHTNING_TERMINAL_VERSION} && \
+    git verify-tag ${LIGHTNING_TERMINAL_VERSION}
+
+FROM node:16.14.2-alpine as node
+
+ARG PUBLIC_URL=""
+
+ENV LIT_PKG_DIR="/go/src/github.com/lightninglabs/lightning-terminal"
+
+COPY --from=git ${LIT_PKG_DIR} ${LIT_PKG_DIR}
+
+RUN yarn config set registry "http://registry.npmjs.org" && \
+    echo --network-timeout 1000000 >> ~/.yarnrc && \
+    cd ${LIT_PKG_DIR}/app && \
+    yarn install --frozen-lockfile && \
+    yarn build
+
+FROM golang:1.19-alpine AS go
+
+ARG PUBLIC_URL=""
+
+ENV LIT_PKG_DIR="/go/src/github.com/lightninglabs/lightning-terminal"
+
+COPY --from=node ${LIT_PKG_DIR} ${LIT_PKG_DIR}
 
 ENV GODEBUG netdns=cgo
 ENV GO111MODULE on
 
 RUN apk add --no-cache --update \
-    alpine-sdk \
-    bash \
-    ca-certificates \
-    gnupg \
-    perl-utils \
     git \
-    make \
-    nodejs \
-    yarn
+    make
 
-RUN yarn config set registry "http://registry.npmjs.org" && \
-    echo --network-timeout 1000000 >> ~/.yarnrc
-
-RUN gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys 26984CB69EB8C4A26196F7A4D7D916376026F177 && \
-    git clone https://github.com/lightninglabs/lightning-terminal.git /go/src/github.com/lightninglabs/lightning-terminal && \
-    cd /go/src/github.com/lightninglabs/lightning-terminal && \
-    git checkout ${LIGHTNING_TERMINAL_VERSION} && \
-    git verify-tag ${LIGHTNING_TERMINAL_VERSION}
-
-RUN cd /go/src/github.com/lightninglabs/lightning-terminal && make build
+RUN cd ${LIT_PKG_DIR} &&  \
+    make go-install PUBLIC_URL=$PUBLIC_URL
 
 FROM alpine:3.16
 
 ENV DATA_PATH=/home/.lit
 ENV USER=lit
 
-COPY --from=builder /go/src/github.com/lightninglabs/lightning-terminal/cmd/litd /bin/litd
-COPY --from=builder /go/src/github.com/lightninglabs/lightning-terminal/cmd/litcli /bin/litcli
+COPY --from=go /go/bin/litd /bin/
+COPY --from=go /go/bin/litcli /bin/
 
 RUN apk --no-cache add \
     su-exec \
@@ -45,7 +64,7 @@ RUN addgroup --system --gid 1000 ${USER} && \
 COPY ./scripts/update-user.sh /docker/update-user.sh
 COPY ./docker/lightning-terminal/entrypoint.sh /docker/entrypoint.sh
 
-EXPOSE 443
+EXPOSE 8443
 
 ENTRYPOINT [ "/docker/entrypoint.sh" ]
 

@@ -7,7 +7,6 @@ on:
       - master
     paths:
       - docker/taro/**
-      - scripts/**
 
 jobs:
   build:

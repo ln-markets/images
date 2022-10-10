@@ -7,7 +7,6 @@ on:
       - master
     paths:
       - docker/loop/**
-      - scripts/**
 
 jobs:
   build:

@@ -7,7 +7,6 @@ on:
       - master
     paths:
       - docker/faraday/**
-      - scripts/**
 
 jobs:
   build:

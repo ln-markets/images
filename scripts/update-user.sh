@@ -30,7 +30,7 @@ if [ ! -z "${PGID}" ]; then
 fi
 
 if [ $(stat -c %u "/home") -ne $(id -u ${USER}) ]; then
-  echo "Updating permissions on /home and recursivly on ${DATA_PATH}"
+  echo "Updating permissions on /home"
   chown ${USER}:${USER} /home
 
   if [ ! -z "${DATA_PATH}" ]; then
@@ -38,6 +38,7 @@ if [ $(stat -c %u "/home") -ne $(id -u ${USER}) ]; then
       mkdir -p $DATA_PATH
     fi
 
+    echo "Updating permissions recursivly on ${DATA_PATH}"
     chown -R ${USER}:${USER} ${DATA_PATH}
   fi
 fi

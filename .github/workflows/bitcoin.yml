@@ -7,7 +7,6 @@ on:
       - master
     paths:
       - docker/bitcoin/**
-      - scripts/**
 
 jobs:
   build:
