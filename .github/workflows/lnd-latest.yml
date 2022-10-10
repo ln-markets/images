@@ -52,7 +52,8 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v3
         with:
-          context: docker/lnd
+          context: .
+          file: docker/lnd/Dockerfile
           platforms: linux/amd64,linux/arm64
           build-args: LND_COMMIT=${{ env.LND_COMMIT }}
           push: true
