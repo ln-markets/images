@@ -10,6 +10,6 @@ RUN apk add --update --no-cache \
 RUN chown satoshi:satoshi /usr/sbin/crond \
     && setcap cap_setgid=ep /usr/sbin/crond
 
-COPY ./regtest.sh ./scripts/regtest.sh
+COPY ./regtest.sh ./docker/regtest.sh
 
-ENTRYPOINT ["/scripts/regtest.sh"]
+ENTRYPOINT ["/docker/regtest.sh"]

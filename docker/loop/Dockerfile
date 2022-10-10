@@ -26,6 +26,8 @@ RUN cd ${LOOP_PKG_DIR} && make install
 
 FROM alpine:3.16
 
+ENV LOOP_PATH=/home/.loop
+
 COPY --from=builder /go/bin/loop /bin/
 COPY --from=builder /go/bin/loopd /bin/
 
@@ -33,13 +35,14 @@ RUN apk --no-cache add \
     su-exec \
     shadow
 
-RUN addgroup --system --gid 1000 loop && \
-    adduser loop -G loop --system --home /home --uid 1000
+RUN addgroup --system --gid 1000 ${USER} && \
+    adduser ${USER} -G ${USER} --system --home /home --uid 1000
 
-COPY ./entrypoint.sh /entrypoint.sh
+COPY ./scripts/update-user.sh /docker/update-user.sh
+COPY ./docker/loop/entrypoint.sh /docker/entrypoint.sh
 
 EXPOSE 8081 11010
 
-ENTRYPOINT [ "/entrypoint.sh" ]
+ENTRYPOINT [ "/docker/entrypoint.sh" ]
 
 CMD ["loopd"]

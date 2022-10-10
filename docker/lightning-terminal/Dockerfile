@@ -1,6 +1,6 @@
 FROM golang:1.19-alpine AS builder
 
-ARG LIGHTNING_TERMINAL_VERSION=v0.8.1-alpha
+ARG LIGHTNING_TERMINAL_VERSION=v0.8.0-alpha
 
 ENV GODEBUG netdns=cgo
 ENV GO111MODULE on
@@ -29,6 +29,9 @@ RUN cd /go/src/github.com/lightninglabs/lightning-terminal && make build
 
 FROM alpine:3.16
 
+ENV DATA_PATH=/home/.lit
+ENV USER=lit
+
 COPY --from=builder /go/src/github.com/lightninglabs/lightning-terminal/cmd/litd /bin/litd
 COPY --from=builder /go/src/github.com/lightninglabs/lightning-terminal/cmd/litcli /bin/litcli
 
@@ -36,13 +39,14 @@ RUN apk --no-cache add \
     su-exec \
     shadow
 
-RUN addgroup --system --gid 1000 lit && \
-    adduser lit -G lit --system --home /home --uid 1000
+RUN addgroup --system --gid 1000 ${USER} && \
+    adduser ${USER} -G ${USER} --system --home /home --uid 1000
 
-COPY entrypoint.sh /entrypoint.sh
+COPY ./scripts/update-user.sh /docker/update-user.sh
+COPY ./docker/lightning-terminal/entrypoint.sh /docker/entrypoint.sh
 
 EXPOSE 443
 
-ENTRYPOINT [ "/entrypoint.sh" ]
+ENTRYPOINT [ "/docker/entrypoint.sh" ]
 
 CMD ["litd"]

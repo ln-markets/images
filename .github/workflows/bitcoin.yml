@@ -7,6 +7,7 @@ on:
       - master
     paths:
       - docker/bitcoin/**
+      - scripts/**
 
 jobs:
   build:
@@ -52,7 +53,8 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v3
         with:
-          context: docker/bitcoin
+          context: .
+          file: docker/bitcoin/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
           cache-from: type=registry,ref=ghcr.io/ln-markets/bitcoin:latest

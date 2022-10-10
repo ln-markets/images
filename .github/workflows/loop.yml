@@ -7,6 +7,7 @@ on:
       - master
     paths:
       - docker/loop/**
+      - scripts/**
 
 jobs:
   build:
@@ -52,7 +53,8 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v3
         with:
-          context: docker/loop
+          context: .
+          file: docker/loop/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}

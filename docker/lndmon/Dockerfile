@@ -21,17 +21,20 @@ RUN cd ${LNDMON_PKG_DIR}/cmd/lndmon && go build
 
 FROM alpine:3.16
 
+ENV USER=lndmon
+
 COPY --from=builder /go/src/github.com/lightninglabs/lndmon/cmd/lndmon /bin/
 
 RUN apk --no-cache add \
     su-exec \
     shadow
 
-RUN addgroup --system --gid 1000 lndmon && \
-    adduser lndmon -G lndmon --system --home /home --uid 1000
+RUN addgroup --system --gid 1000 ${USER} && \
+    adduser ${USER} -G ${USER} --system --home /home --uid 1000
 
-COPY entrypoint.sh /entrypoint.sh
+COPY ./scripts/update-user.sh /docker/update-user.sh
+COPY ./docker/lndmon/entrypoint.sh /docker/entrypoint.sh
 
-ENTRYPOINT [ "/entrypoint.sh" ]
+ENTRYPOINT [ "/docker/entrypoint.sh" ]
 
 CMD ["lndmon"]

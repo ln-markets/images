@@ -7,7 +7,7 @@ on:
       - master
     paths:
       - docker/lndmon/**
-
+      - scripts/**
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -52,7 +52,8 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v3
         with:
-          context: docker/lndmon
+          context: .
+          file: docker/lndmon/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}

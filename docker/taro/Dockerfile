@@ -19,6 +19,8 @@ RUN cd ${TARO_PKG_DIR} && make install
 
 FROM alpine:3.16
 
+ENV USER=taro
+
 COPY --from=builder /go/bin/tarod /bin/tarod
 COPY --from=builder /go/bin/tarocli bin/tarocli
 
@@ -26,13 +28,14 @@ RUN apk add --no-cache --update \
     su-exec \
     shadow
 
-RUN addgroup --system --gid 1000 taro && \
-    adduser taro -G taro --system --home /home --uid 1000
+RUN addgroup --system --gid 1000 ${USER} && \
+    adduser ${USER} -G ${USER} --system --home /home --uid 1000
 
-COPY ./entrypoint.sh /entrypoint.sh
+COPY ./scripts/update-user.sh /docker/update-user.sh
+COPY ./docker/pool/entrypoint.sh /docker/entrypoint.sh
 
 EXPOSE 10029 8089
 
-ENTRYPOINT [ "/entrypoint.sh" ]
+ENTRYPOINT [ "/docker/entrypoint.sh" ]
 
 CMD ["tarod"]

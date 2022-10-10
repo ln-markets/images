@@ -33,9 +33,11 @@ if [ $(stat -c %u "/home") -ne $(id -u ${USER}) ]; then
   echo "Updating permissions on /home and recursivly on ${DATA_PATH}"
   chown ${USER}:${USER} /home
 
-  if [ ! -d "$DATA_PATH" ]; then
-    mkdir -p $DATA_PATH
-  fi
+  if [ ! -z "${DATA_PATH}" ]; then
+    if [ ! -d "$DATA_PATH" ]; then
+      mkdir -p $DATA_PATH
+    fi
 
-  chown -R ${USER}:${USER} ${DATA_PATH}
+    chown -R ${USER}:${USER} ${DATA_PATH}
+  fi
 fi

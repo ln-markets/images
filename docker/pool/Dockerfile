@@ -26,6 +26,9 @@ RUN cd ${POOL_PKG_DIR} && make install
 
 FROM alpine:3.16
 
+ENV POOL_PATH=/home/.pool
+ENV USER=pool
+
 COPY --from=builder /go/bin/pool /bin/
 COPY --from=builder /go/bin/poold /bin/
 
@@ -33,13 +36,14 @@ RUN apk --no-cache add \
     su-exec \
     shadow
 
-RUN addgroup --system --gid 1000 pool && \
-    adduser pool -G pool --system --home /home --uid 1000
+RUN addgroup --system --gid 1000 ${USER} && \
+    adduser ${USER} -G ${USER} --system --home /home --uid 1000
 
-COPY ./entrypoint.sh /entrypoint.sh
+COPY ./scripts/update-user.sh /docker/update-user.sh
+COPY ./docker/pool/entrypoint.sh /docker/entrypoint.sh
 
 EXPOSE 12010 8281
 
-ENTRYPOINT [ "/entrypoint.sh" ]
+ENTRYPOINT [ "/docker/entrypoint.sh" ]
 
 CMD ["poold"]

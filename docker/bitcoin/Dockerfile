@@ -63,10 +63,10 @@ RUN strip /opt/build/bin/bitcoind && \
 
 FROM alpine:3.16
 
-COPY --from=builder /opt/build/bin/* /bin/
+ENV DATA_PATH=/home/.bitcoin
+ENV USER=satoshi
 
-RUN addgroup --system --gid 1000 satoshi && \
-    adduser satoshi -G satoshi --system --home /home --uid 1000
+COPY --from=builder /opt/build/bin/* /bin/
 
 RUN apk add --no-cache --update \
     boost-filesystem \
@@ -79,13 +79,17 @@ RUN apk add --no-cache --update \
     su-exec \
     shadow
 
-COPY entrypoint.sh /entrypoint.sh
+RUN addgroup --system --gid 1000 ${USER} && \
+    adduser ${USER} -G ${USER} --system --home /home --uid 1000
+
+COPY ./scripts/update-user.sh /docker/update-user.sh
+COPY ./docker/bitcoin/entrypoint.sh /docker/entrypoint.sh
 
 EXPOSE 8080
 EXPOSE 8333 18333 18444
 EXPOSE 8332 18332 18443
 EXPOSE 28332 28333
 
-ENTRYPOINT [ "/entrypoint.sh" ]
+ENTRYPOINT [ "/docker/entrypoint.sh" ]
 
 CMD ["bitcoind"]
