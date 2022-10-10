@@ -27,6 +27,7 @@ RUN cd ${LOOP_PKG_DIR} && make install
 FROM alpine:3.16
 
 ENV LOOP_PATH=/home/.loop
+ENV USER=loop
 
 COPY --from=builder /go/bin/loop /bin/
 COPY --from=builder /go/bin/loopd /bin/
