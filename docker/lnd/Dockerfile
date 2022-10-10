@@ -27,7 +27,7 @@ RUN cd ${LND_PKG_DIR} && make install tags="${LND_BUILD_TAGS}"
 FROM alpine:3.16
 
 ENV LND_CONF_PATH=/home/.lnd/lnd.conf
-ENV DATA_PATH =/home/.lnd
+ENV DATA_PATH=/home/.lnd
 ENV USER=lnd
 
 COPY --from=builder /go/bin/lncli /bin/
