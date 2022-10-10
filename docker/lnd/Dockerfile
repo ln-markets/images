@@ -1,6 +1,6 @@
 FROM golang:1.19-alpine AS builder
 
-ARG LND_VERSION=v0.15.1-beta
+ARG LND_VERSION=v0.15.2-beta
 ARG LND_BUILD_TAGS="autopilotrpc signrpc walletrpc chainrpc invoicesrpc neutrinorpc routerrpc watchtowerrpc monitoring peersrpc kvdb_postrgres kvdb_etcd"
 ARG LND_COMMIT
 
@@ -8,7 +8,7 @@ ENV LND_PKG_DIR="/go/src/github.com/lightningnetwork/lnd"
 
 ENV GODEBUG netdns=cgo
 ENV GO111MODULE on
-    
+
 RUN apk add --no-cache --update \
     gnupg \
     make \
