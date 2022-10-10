@@ -27,20 +27,45 @@ rpcuser=satoshi
 rpcpassword=satoshi
 EOF
 
-cat > /home/crontab << 'EOF'
-* * * * * /home/mine.sh
-* * * * * sleep 30 && /home/mine.sh
-EOF
+touch /home/crontab
 
-cat > /home/mine.sh << 'EOF'
+if [ $CRON_MINE_BTC -eq 1 ]; then
+    echo "Installing cron to mine 1 block every 30seconds"
+    cat > /home/crontab << 'EOF'
+* * * * * /bin/mine
+* * * * * sleep 30 && /bin/mine
+EOF
+fi
+
+cat > /bin/mine << 'EOF'
 #! /usr/bin/env bash
 
-if [ -a /home/satoshi ]; then
-    bitcoin-cli -regtest generatetoaddress 1 $(cat /home/address)
-fi
+address=$(cat /home/address)
+blocks=1
+
+print_usage() {
+    echo "mine [arguments]"
+    echo " "
+    echo "options:"
+    echo "-h        show brief help"
+    echo "-a        address to send mined bitcoin to"
+    echo "-b        number of blocks to mine"
+    exit 0
+}
+
+while getopts 'ha:b:' flag; do
+    case "${flag}" in
+        a) address="${OPTARG}" ;;
+        b) blocks="${OPTARG}" ;;
+        h) print_usage
+    esac
+done
+
+bitcoin-cli -regtest generatetoaddress $blocks $address
+
 EOF
 
-chmod +x /home/mine.sh
+chmod +x /bin/mine
 chown -R satoshi:satoshi /home
 
 # Must be run as root
@@ -58,9 +83,9 @@ create_and_load_wallet() {
 
     su-exec satoshi bash -c "bitcoin-cli -regtest loadwallet satoshi 2>/dev/null" | true
 
-    # Create one address for the wallet where all coins will be mined
+    # Create one address for the wallet where all coins will be mined by the script /bin/mine
     if [ ! -a /home/address ]; then
-        echo 'Create address'
+        echo 'Create default address'
         su-exec satoshi bash -c "bitcoin-cli -regtest getnewaddress > /home/address"
     fi
 }

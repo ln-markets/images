@@ -28,7 +28,6 @@ FROM alpine:3.16
 
 ENV LND_CONF_PATH=/home/.lnd/lnd.conf
 ENV DATA_PATH=/home/.lnd
-ENV USER=lnd
 
 COPY --from=builder /go/bin/lncli /bin/
 COPY --from=builder /go/bin/lnd /bin/
@@ -37,8 +36,8 @@ RUN apk add --no-cache --update \
     su-exec \
     shadow
 
-RUN addgroup --system --gid 1000 ${USER} && \
-    adduser ${USER} -G ${USER} --system --home /home --uid 1000
+RUN addgroup --system --gid 1000 satoshi && \
+    adduser satoshi -G satoshi --system --home /home --uid 1000
 
 COPY ./scripts/update-user.sh /docker/update-user.sh
 COPY ./docker/lnd/entrypoint.sh /docker/entrypoint.sh

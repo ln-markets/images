@@ -12,10 +12,10 @@ RUN deluser tor && \
     addgroup --system --gid 1000 tor && \
     adduser tor -G tor --system --home /home --uid 1000
 
-COPY entrypoint.sh /entrypoint.sh
+COPY entrypoint.sh /docker/entrypoint.sh
 
 EXPOSE 9050 9051
 
-ENTRYPOINT [ "/entrypoint.sh" ]
+ENTRYPOINT [ "/docker/entrypoint.sh" ]
 
 CMD [ "tor" ]

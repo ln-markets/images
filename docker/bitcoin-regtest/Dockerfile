@@ -2,6 +2,8 @@ ARG BITCOIN_REGTEST_VERSION=23.0
 
 FROM lnmarkets/bitcoin:${BITCOIN_REGTEST_VERSION}
 
+ENV CRON_MINE_BTC=1
+
 RUN apk add --update --no-cache \
     dcron \
     bash \
@@ -10,6 +12,6 @@ RUN apk add --update --no-cache \
 RUN chown satoshi:satoshi /usr/sbin/crond \
     && setcap cap_setgid=ep /usr/sbin/crond
 
-COPY ./regtest.sh ./docker/regtest.sh
+COPY docker/bitcoin-regtest/regtest.sh ./docker/regtest.sh
 
 ENTRYPOINT ["/docker/regtest.sh"]

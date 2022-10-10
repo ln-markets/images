@@ -21,16 +21,14 @@ RUN cd ${LNDMON_PKG_DIR}/cmd/lndmon && go build
 
 FROM alpine:3.16
 
-ENV USER=lndmon
-
 COPY --from=builder /go/src/github.com/lightninglabs/lndmon/cmd/lndmon /bin/
 
 RUN apk --no-cache add \
     su-exec \
     shadow
 
-RUN addgroup --system --gid 1000 ${USER} && \
-    adduser ${USER} -G ${USER} --system --home /home --uid 1000
+RUN addgroup --system --gid 1000 satoshi && \
+    adduser satoshi -G satoshi --system --home /home --uid 1000
 
 COPY ./scripts/update-user.sh /docker/update-user.sh
 COPY ./docker/lndmon/entrypoint.sh /docker/entrypoint.sh
