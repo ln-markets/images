@@ -5,19 +5,19 @@ set -e
 CONF_PATH=/etc/tor/torrc
 
 if [ ! -z "${PUID}" ]; then
-  if [ ! "$(id -u toruser)" -eq "${PUID}" ]; then
+  if [ ! "$(id -u tor)" -eq "${PUID}" ]; then
     
     if [ ! "${PUID}" -eq 0 ]; then
       mkdir -p /tmp/temphome
-      usermod -d /tmp/temphome toruser
+      usermod -d /tmp/temphome tor
     fi
     
     # Change the UID
-    usermod -o -u "${PUID}" toruser
+    usermod -o -u "${PUID}" tor
     
     # Cleanup the temp home dir
     if [ ! "${PUID}" -eq 0 ]; then
-      usermod -d /home toruser
+      usermod -d /home tor
       rm -Rf /tmp/temphome
     fi
   fi
@@ -53,11 +53,11 @@ if [ $1 = "tor" ];then
     fi
 
     if test -f "$CONF_PATH"; then
-      su-exec toruser tor -f $CONF_PATH --verify-config
-      exec su-exec toruser tor -f $CONF_PATH
+      su-exec tor tor -f $CONF_PATH --verify-config
+      exec su-exec tor tor -f $CONF_PATH
     fi
 
-    exec su-exec toruser tor
+    exec su-exec tor tor
 else
     exec "$@"
 fi
