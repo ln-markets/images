@@ -30,13 +30,14 @@ EOF
 touch /home/crontab
 
 if [ $CRON_MINE_BTC -eq 1 ]; then
-    echo "Installing cron to mine 1 block every 30seconds"
+    echo "Installing cron to mine 1 block every 30 seconds"
     cat > /home/crontab << 'EOF'
 * * * * * /bin/mine
 * * * * * sleep 30 && /bin/mine
 EOF
 fi
 
+# Script has to be run as satoshi user
 cat > /bin/mine << 'EOF'
 #! /usr/bin/env bash
 
@@ -44,7 +45,7 @@ address=$(cat /home/address)
 blocks=1
 
 print_usage() {
-    echo "mine [arguments]"
+    echo "mine [arguments] (Must be run as satoshi user)"
     echo " "
     echo "options:"
     echo "-h        show brief help"
@@ -62,7 +63,6 @@ while getopts 'ha:b:' flag; do
 done
 
 bitcoin-cli -regtest generatetoaddress $blocks $address
-
 EOF
 
 chmod +x /bin/mine
