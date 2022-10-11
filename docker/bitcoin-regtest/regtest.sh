@@ -76,7 +76,7 @@ crond -b
 create_and_load_wallet() {
     # Sleep because we have to wait for bitcoind to start
     sleep 2
-    if [ ! -a /home/.bitcoin/regtest/wallets/satoshi/wallet.dat ]; then
+    if [ ! -f /home/.bitcoin/regtest/wallets/satoshi/wallet.dat ]; then
         echo 'Create default wallet'
         su-exec satoshi bash -c "bitcoin-cli -regtest createwallet satoshi"
     fi
@@ -84,7 +84,7 @@ create_and_load_wallet() {
     su-exec satoshi bash -c "bitcoin-cli -regtest loadwallet satoshi 2>/dev/null" | true
 
     # Create one address for the wallet where all coins will be mined by the script /bin/mine
-    if [ ! -a /home/address ]; then
+    if [ ! -f /home/address ]; then
         echo 'Create default address'
         su-exec satoshi bash -c "bitcoin-cli -regtest getnewaddress > /home/address"
     fi
