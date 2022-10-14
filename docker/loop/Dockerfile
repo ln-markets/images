@@ -1,7 +1,7 @@
 FROM golang:1.19-alpine AS builder
 
-ARG LOOP_VERSION=v0.20.1-beta
-ARG LOOP_COMMIT
+ARG VERSION
+ARG COMMIT
 
 ENV LOOP_PKG_DIR="/go/src/github.com/lightninglabs/loop"
 
@@ -15,12 +15,12 @@ RUN apk add --no-cache --update \
 
 RUN git clone https://github.com/lightninglabs/loop.git ${LOOP_PKG_DIR} && \
     cd ${LOOP_PKG_DIR}  && \
-    if [[ -z "$LOOP_COMMIT" ]] ; then git checkout ${LOOP_VERSION} ; else git checkout ${LOOP_COMMIT} ; fi
+    if [[ -z "$COMMIT" ]] ; then git checkout ${VERSION} ; else git checkout ${COMMIT} ; fi
 
 # Key is expired
 # RUN gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys DE23E73BFA8A0AD5587D2FCDE80D2F3F311FD87E && \
 #     cd ${LOOP_PKG_DIR}  && \
-#     if [[ -z "$LOOP_COMMIT" ]] ; then git verify-tag ${LOOP_VERSION} ; fi
+#     if [[ -z "$COMMIT" ]] ; then git verify-tag ${VERSION} ; fi
 
 RUN cd ${LOOP_PKG_DIR} && make install
 

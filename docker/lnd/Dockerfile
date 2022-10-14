@@ -1,8 +1,8 @@
 FROM golang:1.19-alpine AS builder
 
-ARG LND_VERSION=v0.15.2-beta
+ARG VERSION
 ARG LND_BUILD_TAGS="autopilotrpc signrpc walletrpc chainrpc invoicesrpc neutrinorpc routerrpc watchtowerrpc monitoring peersrpc kvdb_postrgres kvdb_etcd"
-ARG LND_COMMIT
+ARG COMMIT
 
 ENV LND_PKG_DIR="/go/src/github.com/lightningnetwork/lnd"
 
@@ -16,11 +16,11 @@ RUN apk add --no-cache --update \
 
 RUN git clone https://github.com/lightningnetwork/lnd.git ${LND_PKG_DIR} && \
     cd ${LND_PKG_DIR}  && \
-    if [[ -z "$LND_COMMIT" ]] ; then git checkout ${LND_VERSION} ; else git checkout ${LND_COMMIT} ; fi
+    if [[ -z "$COMMIT" ]] ; then git checkout ${VERSION} ; else git checkout ${COMMIT} ; fi
 
 RUN wget -O - https://raw.githubusercontent.com/lightningnetwork/lnd/master/scripts/keys/roasbeef.asc | gpg --import && \
     cd ${LND_PKG_DIR}  && \
-    if [[ -z "$LND_COMMIT" ]] ; then git verify-tag ${LND_VERSION} ; fi
+    if [[ -z "$COMMIT" ]] ; then git verify-tag ${VERSION} ; fi
 
 RUN cd ${LND_PKG_DIR} && make install tags="${LND_BUILD_TAGS}"
 

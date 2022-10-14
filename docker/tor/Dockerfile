@@ -1,9 +1,9 @@
 FROM alpine:3.16
 
-ARG TOR_VERSION=0.4.7.10-r0
+ARG VERSION
 
 RUN apk add --no-cache --update \
-    tor=${TOR_VERSION} \
+    tor=${VERSION} \
     bash \
     su-exec \
     shadow

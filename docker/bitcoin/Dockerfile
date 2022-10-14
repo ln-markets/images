@@ -2,7 +2,7 @@ FROM lncm/berkeleydb:v4.8.30.NC AS berkleydb
 
 FROM alpine:3.16 AS builder
 
-ARG BITCOIN_VERSION=23.0
+ARG VERSION
 
 WORKDIR /opt
 
@@ -22,15 +22,15 @@ RUN apk add --no-cache \
     linux-headers \
     zeromq-dev
 
-RUN wget https://bitcoincore.org/bin/bitcoin-core-${BITCOIN_VERSION}/bitcoin-${BITCOIN_VERSION}.tar.gz
+RUN wget https://bitcoincore.org/bin/bitcoin-core-${VERSION}/bitcoin-${VERSION}.tar.gz
 
 # Removed gpp signature verification
-RUN wget https://bitcoincore.org/bin/bitcoin-core-${BITCOIN_VERSION}/SHA256SUMS && \
-    grep "bitcoin-${BITCOIN_VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
+RUN wget https://bitcoincore.org/bin/bitcoin-core-${VERSION}/SHA256SUMS && \
+    grep "bitcoin-${VERSION}.tar.gz\$" SHA256SUMS | sha256sum -c -
 
-RUN tar -xzf bitcoin-${BITCOIN_VERSION}.tar.gz
+RUN tar -xzf bitcoin-${VERSION}.tar.gz
 
-WORKDIR /opt/bitcoin-${BITCOIN_VERSION}
+WORKDIR /opt/bitcoin-${VERSION}
 
 RUN ./autogen.sh
 

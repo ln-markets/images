@@ -35,7 +35,7 @@ services:
       lnd
       --noseedbackup
       --maxpendingchannels=10
-      --trickledelay=5000 
+      --trickledelay=5000
       --alias=lnd
       --externalip=172.86.1.101
       --tlsextraip=172.86.1.101
@@ -51,7 +51,7 @@ services:
       --bitcoind.rpcpass=lnmarkets
       --bitcoind.zmqpubrawblock=tcp://bitcoin:28334
       --bitcoind.zmqpubrawtx=tcp://bitcoin:28335
-  
+
   taro:
     image: taro:latest
     restart: unless-stopped

@@ -1,7 +1,7 @@
 FROM golang:1.19-alpine AS builder
 
-ARG POOL_VERSION=v0.5.8-alpha
-ARG POOL_COMMIT
+ARG VERSION
+ARG COMMIT
 
 ENV POOL_PKG_DIR="/go/src/github.com/lightninglabs/pool"
 
@@ -15,12 +15,12 @@ RUN apk add --no-cache --update \
 
 RUN git clone https://github.com/lightninglabs/pool.git ${POOL_PKG_DIR} && \
     cd ${POOL_PKG_DIR}  && \
-    if [[ -z "$POOL_COMMIT" ]] ; then git checkout ${POOL_VERSION} ; else git checkout ${POOL_COMMIT} ; fi
+    if [[ -z "$COMMIT" ]] ; then git checkout ${VERSION} ; else git checkout ${COMMIT} ; fi
 
 
 RUN gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys F4FC70F07310028424EFC20A8E4256593F177720 && \
     cd ${POOL_PKG_DIR}  && \
-    if [[ -z "$POOL_COMMIT" ]] ; then git verify-tag ${POOL_VERSION} ; fi
+    if [[ -z "$COMMIT" ]] ; then git verify-tag ${VERSION} ; fi
 
 RUN cd ${POOL_PKG_DIR} && make install
 

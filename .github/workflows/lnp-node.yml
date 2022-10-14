@@ -1,4 +1,4 @@
-name: lnd
+name: lnp-node
 
 on:
   workflow_dispatch:
@@ -6,12 +6,12 @@ on:
     branches:
       - master
     paths:
-      - docker/lnd/**
+      - docker/lnp-node/**
 
 jobs:
   build:
-    uses: ./.github/workflows/bake.yml
+    uses: ./.github/workflows/reusable-build.yml
     secrets: inherit
     with:
-      path: docker/lnd
+      path: docker/lnp-node
       target: release

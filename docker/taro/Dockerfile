@@ -1,7 +1,7 @@
 FROM golang:1.19-alpine AS builder
 
-ARG TARO_VERSION=v0.1.0-alpha
-ARG TARO_COMMIT
+ARG VERSION
+ARG COMMIT
 
 ENV GODEBUG netdns=cgo
 ENV GO111MODULE on
@@ -13,7 +13,7 @@ RUN apk add --no-cache --update \
 
 RUN git clone https://github.com/lightninglabs/taro.git ${TARO_PKG_DIR} && \
     cd ${TARO_PKG_DIR}  && \
-    if [[ -z "$TARO_COMMIT" ]] ; then git checkout ${TARO_VERSION} ; else git checkout ${TARO_COMMIT} ; fi
+    if [[ -z "$COMMIT" ]] ; then git checkout ${VERSION} ; else git checkout ${COMMIT} ; fi
 
 RUN cd ${TARO_PKG_DIR} && make install
 

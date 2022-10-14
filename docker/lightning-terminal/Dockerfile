@@ -1,18 +1,18 @@
 FROM alpine AS git
 
-ARG LIGHTNING_TERMINAL_VERSION=v0.8.0-alpha
+ARG VERSION
 
 ENV LIT_PKG_DIR="/go/src/github.com/lightninglabs/lightning-terminal"
 
 RUN apk add --no-cache --update \
     git \
-    gnupg 
+    gnupg
 
 RUN gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys 26984CB69EB8C4A26196F7A4D7D916376026F177 && \
     git clone https://github.com/lightninglabs/lightning-terminal.git ${LIT_PKG_DIR} && \
     cd ${LIT_PKG_DIR} && \
-    git checkout ${LIGHTNING_TERMINAL_VERSION} && \
-    git verify-tag ${LIGHTNING_TERMINAL_VERSION}
+    git checkout ${VERSION} && \
+    git verify-tag ${VERSION}
 
 FROM node:16.14.2-alpine as node
 
