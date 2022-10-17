@@ -18,7 +18,7 @@ on:
 
 jobs:
   latest-commit:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     outputs:
       COMMIT_SHA: ${{ steps.commit.outputs.COMMIT_SHA }}
     steps:
