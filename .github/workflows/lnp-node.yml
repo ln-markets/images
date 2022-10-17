@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    uses: ./.github/workflows/reusable-build.yml
+    uses: ./.github/workflows/bake.yml
     secrets: inherit
     with:
       path: docker/lnp-node
