@@ -1,0 +1,17 @@
+name: storm-node
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - docker/storm-node/**
+
+jobs:
+  build:
+    uses: ./.github/workflows/bake.yml
+    secrets: inherit
+    with:
+      path: docker/storm-node
+      target: release

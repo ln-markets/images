@@ -1,0 +1,17 @@
+name: rgb-node
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - docker/rgb-node/**
+
+jobs:
+  build:
+    uses: ./.github/workflows/bake.yml
+    secrets: inherit
+    with:
+      path: docker/rgb-node
+      target: release

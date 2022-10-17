@@ -1,0 +1,17 @@
+name: storm-stored
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - docker/storm-stored/**
+
+jobs:
+  build:
+    uses: ./.github/workflows/bake.yml
+    secrets: inherit
+    with:
+      path: docker/storm-stored
+      target: release

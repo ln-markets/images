@@ -1,0 +1,17 @@
+name: bp-node
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - docker/bp-node/**
+
+jobs:
+  build:
+    uses: ./.github/workflows/bake.yml
+    secrets: inherit
+    with:
+      path: docker/bp-node
+      target: release
