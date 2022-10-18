@@ -1,0 +1,36 @@
+name: 'Get latest commit'
+description: 'Get the latest commit of a given repo and branch'
+
+inputs:
+  repo:
+    description: "Git repository {owner}/{name}"
+    required: true
+    type: string
+  branch:
+    required: false
+    type: string
+    default: main
+
+outputs:
+  sha:
+    description: "Shasum of the latest commit"
+    value: ${{ steps.commit.outputs.sha }}
+  sha-short:
+    description: "Shasum of the latest commit (short 8 chars version)"
+    value: ${{ steps.shorten.outputs.sha-short }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Get latest commit shasum
+      id: commit
+      uses: sergeysova/jq-action@v2
+      with:
+        cmd: echo "sha=$(curl -s https://api.github.com/repos/${{ inputs.repo }}/commits/${{ inputs.branch }} | jq -r .sha)" >> $GITHUB_OUTPUT
+    - name: Shorten commit sha
+      id: shorten
+      run: echo "sha-short=$(echo ${{ steps.commit.outputs.sha }} | cut -c1-7)"  >> $GITHUB_OUTPUT
+      shell: bash
+    - name: Print commit checksum
+      run: echo "${{ steps.commit.outputs.sha }} - ${{ steps.shorten.outputs.sha-short }}"
+      shell: bash

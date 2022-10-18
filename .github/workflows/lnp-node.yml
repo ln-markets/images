@@ -2,16 +2,69 @@ name: lnp-node
 
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        type: choice
+        description: Target
+        required: true
+        options:
+        - release
+        - nightly
   push:
     branches:
       - master
     paths:
       - docker/lnp-node/**
+  schedule:
+    - cron: "0 8,20 * * *"
 
 jobs:
-  build:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      commit: ${{ steps.latest-commit.outputs.sha }}
+      tag-commit-exists: ${{ steps.check-tag-commit.outputs.exists }}
+      tag-release-exists: ${{ steps.check-tag-release.outputs.exists }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Get latest commit
+        uses: ./.github/actions/latest-commit
+        id: latest-commit
+        with:
+          repo: LNP-WG/lnp-node
+          branch: master
+      - name: Check if tag for latest commit exists in registry
+        uses: ./.github/actions/check-tag
+        id: check-tag-commit
+        with:
+          path: docker/lnp-node
+          tag: ${{ steps.latest-commit.outputs.sha-short }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Check if tag for release exists in registry
+        uses: ./.github/actions/check-tag
+        id: check-tag-release
+        with:
+          path: docker/lnp-node
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  build-release:
+    needs: prepare
+    if: ${{ (github.event_name == 'push' || github.event.inputs.target == 'release') && needs.prepare.outputs.tag-release-exists == 'false' }}
     uses: ./.github/workflows/bake.yml
     secrets: inherit
     with:
+      runs-on: self-hosted
       path: docker/lnp-node
       target: release
+
+  build-nightly:
+    needs: prepare
+    if: ${{ (github.event_name == 'schedule' || github.event.inputs.target == 'nightly') && needs.prepare.outputs.tag-commit-exists == 'false' }}
+    uses: ./.github/workflows/bake.yml
+    secrets: inherit
+    with:
+      runs-on: self-hosted
+      path: docker/lnp-node
+      target: nightly
+      commit: ${{ needs.prepare.outputs.commit }}

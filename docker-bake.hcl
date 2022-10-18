@@ -19,7 +19,7 @@ variable "IMAGE_PATH" {
 
 function "shorten" {
     params = [ string ]
-    result = substr(string, 0, 8)
+    result = substr(string, 0, 7)
 }
 
 function "tag" {
