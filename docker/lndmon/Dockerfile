@@ -31,8 +31,6 @@ RUN addgroup --system --gid 1000 satoshi && \
     adduser satoshi -G satoshi --system --home /home --uid 1000
 
 COPY ./scripts/update-user.sh /docker/update-user.sh
-COPY ./docker/lndmon/entrypoint.sh /docker/entrypoint.sh
+COPY ./scripts/entrypoint-alpine.sh /docker/entrypoint.sh
 
-ENTRYPOINT [ "/docker/entrypoint.sh" ]
-
-CMD ["lndmon"]
+ENTRYPOINT [ "/docker/entrypoint.sh", "lndmon" ]

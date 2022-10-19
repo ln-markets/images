@@ -39,10 +39,8 @@ RUN addgroup --system --gid 1000 satoshi && \
     adduser satoshi -G satoshi --system --home /home --uid 1000
 
 COPY ./scripts/update-user.sh /docker/update-user.sh
-COPY ./docker/loop/entrypoint.sh /docker/entrypoint.sh
+COPY ./scripts/entrypoint-alpine.sh /docker/entrypoint.sh
 
 EXPOSE 8081 11010
 
-ENTRYPOINT [ "/docker/entrypoint.sh" ]
-
-CMD ["loopd"]
+ENTRYPOINT [ "/docker/entrypoint.sh", "loopd" ]

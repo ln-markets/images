@@ -30,10 +30,8 @@ RUN addgroup --system --gid 1000 satoshi && \
     adduser satoshi -G satoshi --system --home /home --uid 1000
 
 COPY ./scripts/update-user.sh /docker/update-user.sh
-COPY ./docker/pool/entrypoint.sh /docker/entrypoint.sh
+COPY ./scripts/entrypoint-alpine.sh /docker/entrypoint.sh
 
 EXPOSE 10029 8089
 
-ENTRYPOINT [ "/docker/entrypoint.sh" ]
-
-CMD ["tarod"]
+ENTRYPOINT [ "/docker/entrypoint.sh", "tarod" ]
