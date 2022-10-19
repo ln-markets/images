@@ -46,22 +46,9 @@ RUN apk add --no-cache --update \
 RUN cd ${LIT_PKG_DIR} &&  \
     make go-install PUBLIC_URL=$PUBLIC_URL
 
-FROM alpine:3.16
+FROM lnmarkets/base-alpine:3.16
 
 ENV DATA_PATH=/home/.lit
-
-COPY --from=go /go/bin/litd /bin/
-COPY --from=go /go/bin/litcli /bin/
-
-RUN apk --no-cache add \
-    su-exec \
-    shadow
-
-RUN addgroup --system --gid 1000 satoshi && \
-    adduser satoshi -G satoshi --system --home /home --uid 1000
-
-COPY ./scripts/update-user.sh /docker/update-user.sh
-COPY ./scripts/entrypoint-alpine.sh /docker/entrypoint.sh
 
 EXPOSE 8443
 

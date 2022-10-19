@@ -24,23 +24,13 @@ RUN wget -O - https://raw.githubusercontent.com/lightningnetwork/lnd/master/scri
 
 RUN cd ${LND_PKG_DIR} && make install tags="${LND_BUILD_TAGS}"
 
-FROM alpine:3.16
+FROM lnmarkets/base-alpine:3.16
 
 ENV LND_CONF_PATH=/home/.lnd/lnd.conf
 ENV DATA_PATH=/home/.lnd
 
 COPY --from=builder /go/bin/lncli /bin/
 COPY --from=builder /go/bin/lnd /bin/
-
-RUN apk add --no-cache --update \
-    su-exec \
-    shadow
-
-RUN addgroup --system --gid 1000 satoshi && \
-    adduser satoshi -G satoshi --system --home /home --uid 1000
-
-COPY ./scripts/update-user.sh /docker/update-user.sh
-COPY ./scripts/entrypoint-alpine.sh /docker/entrypoint.sh
 
 EXPOSE 9735 9911 10009 8080
 

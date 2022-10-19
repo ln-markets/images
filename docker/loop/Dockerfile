@@ -24,22 +24,12 @@ RUN git clone https://github.com/lightninglabs/loop.git ${LOOP_PKG_DIR} && \
 
 RUN cd ${LOOP_PKG_DIR} && make install
 
-FROM alpine:3.16
+FROM lnmarkets/base-alpine:3.16
 
 ENV LOOP_PATH=/home/.loop
 
 COPY --from=builder /go/bin/loop /bin/
 COPY --from=builder /go/bin/loopd /bin/
-
-RUN apk --no-cache add \
-    su-exec \
-    shadow
-
-RUN addgroup --system --gid 1000 satoshi && \
-    adduser satoshi -G satoshi --system --home /home --uid 1000
-
-COPY ./scripts/update-user.sh /docker/update-user.sh
-COPY ./scripts/entrypoint-alpine.sh /docker/entrypoint.sh
 
 EXPOSE 8081 11010
 

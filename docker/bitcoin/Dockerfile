@@ -61,7 +61,7 @@ RUN strip /opt/build/bin/bitcoind && \
     strip /opt/build/bin/bitcoin-tx && \
     strip /opt/build/bin/bitcoin-wallet
 
-FROM alpine:3.16
+FROM lnmarkets/base-alpine:3.16
 
 ENV DATA_PATH=/home/.bitcoin
 
@@ -74,21 +74,11 @@ RUN apk add --no-cache --update \
     libsodium \
     libstdc++ \
     libzmq \
-    sqlite-libs \
-    su-exec \
-    shadow
-
-RUN addgroup --system --gid 1000 satoshi && \
-    adduser satoshi -G satoshi --system --home /home --uid 1000
-
-COPY ./scripts/update-user.sh /docker/update-user.sh
-COPY ./docker/bitcoin/entrypoint.sh /docker/entrypoint.sh
+    sqlite-libs
 
 EXPOSE 8080
 EXPOSE 8333 18333 18444
 EXPOSE 8332 18332 18443
 EXPOSE 28332 28333
 
-ENTRYPOINT [ "/docker/entrypoint.sh" ]
-
-CMD ["bitcoind"]
+ENTRYPOINT [ "/docker/entrypoint.sh", "bitcoind" ]
