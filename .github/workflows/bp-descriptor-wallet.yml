@@ -1,4 +1,4 @@
-name: descriptor-wallet
+name: bp-descriptor-wallet
 
 on:
   workflow_dispatch:

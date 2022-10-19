@@ -1,0 +1,29 @@
+name: lnpbp-tools
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        type: choice
+        description: Target
+        required: true
+        options:
+        - release
+        - nightly
+
+jobs:
+  build-release:
+    if: ${{ github.event.inputs.target == 'release' }}
+    uses: ./.github/workflows/bake.yml
+    secrets: inherit
+    with:
+      path: docker/lnpbp-tools
+      target: release
+
+  build-nightly:
+    if: ${{ github.event.inputs.target == 'nightly' }}
+    uses: ./.github/workflows/bake.yml
+    secrets: inherit
+    with:
+      path: docker/lnpbp-tools
+      target: nightly
+      dockerfile: Dockerfile.nightly

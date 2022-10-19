@@ -42,7 +42,7 @@ jobs:
           tag: ${{ steps.latest-commit.outputs.sha-short }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Check if tag for release exists in registry
-                uses: ./.github/actions/check-tag
+        uses: ./.github/actions/check-tag
         id: check-tag-release
         with:
           path: docker/bp-node
