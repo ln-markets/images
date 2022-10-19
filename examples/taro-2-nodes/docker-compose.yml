@@ -1,0 +1,115 @@
+version: "3.7"
+
+networks:
+  local:
+    name: local
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.86.1.0/24
+
+volumes:
+  bitcoin:
+  lnd-bob:
+  taro-bob:
+  lnd-alice:
+  taro-alice:
+
+services:
+  bitcoin:
+    image: lnmarkets/bitcoin-regtest:23.0
+    restart: unless-stopped
+    volumes:
+      - bitcoin:/home/.bitcoin
+    networks:
+      - local
+
+  lnd-bob:
+    image: lnmarkets/lnd:nightly
+    restart: unless-stopped
+    volumes:
+      - lnd-bob:/home/.lnd
+    command: >-
+      lnd
+      --noseedbackup
+      --maxpendingchannels=10
+      --trickledelay=5000
+      --alias=lnd-bob
+      --externalip=lnd-bob
+      --tlsextradomain=lnd-bob
+      --listen=0.0.0.0:9735
+      --rpclisten=0.0.0.0:10009
+      --restlisten=0.0.0.0:8080
+      --bitcoin.active
+      --bitcoin.regtest
+      --bitcoin.node=bitcoind
+      --bitcoind.rpchost=bitcoin:18443
+      --bitcoind.rpcuser=satoshi
+      --bitcoind.rpcpass=satoshi
+      --bitcoind.zmqpubrawblock=tcp://bitcoin:28334
+      --bitcoind.zmqpubrawtx=tcp://bitcoin:28335
+    depends_on:
+      - bitcoin
+    networks:
+      - local
+
+  taro-bob:
+    image: tarolocal
+    restart: unless-stopped
+    volumes:
+      - lnd-bob:/home/.lnd
+      - taro-bob:/home
+    command: >-
+      --network=regtest
+      --debuglevel=debug
+      --lnd.host=lnd-bob:10009
+    depends_on:
+      - bitcoin
+      - lnd-bob
+    networks:
+      - local
+
+  lnd-alice:
+    image: lnmarkets/lnd:nightly
+    restart: unless-stopped
+    volumes:
+      - lnd-alice:/home/.lnd
+    command: >-
+      lnd
+      --noseedbackup
+      --maxpendingchannels=10
+      --trickledelay=5000
+      --alias=lnd-alice
+      --externalip=lnd-alice
+      --tlsextradomain=lnd-alice
+      --listen=0.0.0.0:9735
+      --rpclisten=0.0.0.0:10009
+      --restlisten=0.0.0.0:8080
+      --bitcoin.active
+      --bitcoin.regtest
+      --bitcoin.node=bitcoind
+      --bitcoind.rpchost=bitcoin:18443
+      --bitcoind.rpcuser=satoshi
+      --bitcoind.rpcpass=satoshi
+      --bitcoind.zmqpubrawblock=tcp://bitcoin:28334
+      --bitcoind.zmqpubrawtx=tcp://bitcoin:28335
+    depends_on:
+      - bitcoin
+    networks:
+      - local
+
+  taro-alice:
+    image: lnmarkets/taro:nightly
+    restart: unless-stopped
+    volumes:
+      - lnd-alice:/home/.lnd
+      - taro-alice:/home
+    command: >-
+      --network=regtest
+      --debuglevel=debug
+      --lnd.host=lnd-alice:10009
+    depends_on:
+      - bitcoin
+      - lnd-alice
+    networks:
+      - local
