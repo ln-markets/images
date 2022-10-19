@@ -68,3 +68,20 @@ jobs:
       path: docker/storm-stored
       target: nightly
       commit: ${{ needs.prepare.outputs.commit }}
+
+  build-lnpbp-tools-release:
+    needs: build-release
+    uses: ./.github/workflows/bake.yml
+    secrets: inherit
+    with:
+      path: docker/lnpbp-tools
+      target: release
+
+  build-lnpbp-tools-nightly:
+    needs: build-nightly
+    uses: ./.github/workflows/bake.yml
+    secrets: inherit
+    with:
+      path: docker/lnpbp-tools
+      target: nightly
+      dockerfile: Dockerfile.nightly

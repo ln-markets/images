@@ -17,6 +17,10 @@ variable "IMAGE_PATH" {
     default = "docker/${NAME}"
 }
 
+variable "DOCKERFILE" {
+    default = "Dockerfile"
+}
+
 function "shorten" {
     params = [ string ]
     result = substr(string, 0, 7)
@@ -27,9 +31,14 @@ function "tag" {
     result = notequal("",tag) ? [ "ghcr.io/ln-markets/${name}:${tag}", "lnmarkets/${name}:${tag}" ] : []
 }
 
+function "path_from_context" {
+    params = [ path ]
+    result = CONTEXT == "global" ? "${IMAGE_PATH}/${path}" : path
+}
+
 target "default" {
     context = CONTEXT == "global" ? "." : "${IMAGE_PATH}"
-    dockerfile = CONTEXT == "global" ? "${IMAGE_PATH}/Dockerfile" : "Dockerfile"
+    dockerfile = path_from_context(DOCKERFILE)
     labels = {
         "org.opencontainers.image.title" = "${NAME}"
         "org.opencontainers.image.description" = "${DESCRIPTION}"

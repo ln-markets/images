@@ -25,14 +25,6 @@ runs:
       with:
         env-file: ${{ inputs.path }}/image.hcl
 
-    - name: Fetch existing tags for container
-      uses: octokit/request-action@v2.1.0
-      id: get-versions
-      with:
-        route: GET /orgs/ln-markets/packages/container/${{ env.NAME }}/versions?per_page=100
-      env:
-        GITHUB_TOKEN: ${{ inputs.github-token }}
-
     - name: Set tag to search for
       run: |
         if [ -z "${{ inputs.tag }}" ]; then
@@ -45,7 +37,8 @@ runs:
     - name: Check if tag exists
       id: result
       run: |
-        echo "exists=$(echo '${{ steps.get-versions.outputs.data }}' | jq --arg tag ${{ env.TAG }} -e -r '.[].metadata.container.tags | .[] | select(. == $tag)' >/dev/null && echo true || echo false)" >> $GITHUB_OUTPUT
+        RESULT="$(curl -H "Accept: application/vnd.github+json" -H "Authorization: Bearer ${{ inputs.github-token }}" https://api.github.com/orgs/ln-markets/packages/container/${{ env.NAME }}/versions?per_page=100)"
+        echo "exists=$(echo $RESULT | jq --arg tag ${{ env.TAG }} -e -r '.[].metadata.container.tags | .[] | select(. == $tag)' &>/dev/null && echo true || echo false)" >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Print result

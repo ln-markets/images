@@ -1,4 +1,4 @@
-name: rgb-node
+name: rgb20
 
 on:
   workflow_dispatch:
@@ -14,7 +14,7 @@ on:
     branches:
       - master
     paths:
-      - docker/rgb-node/**
+      - docker/lnpbp-tools/rgb20/**
   schedule:
     - cron: "0 8,20 * * *"
 
@@ -32,20 +32,20 @@ jobs:
         uses: ./.github/actions/latest-commit
         id: latest-commit
         with:
-          repo: RGB-WG/rgb-node
+          repo: RGB-WG/rust-rgb20
           branch: master
       - name: Check if tag for latest commit exists in registry
         uses: ./.github/actions/check-tag
         id: check-tag-commit
         with:
-          path: docker/rgb-node
+          path: docker/lnpbp-tools/rgb20
           tag: ${{ steps.latest-commit.outputs.sha-short }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Check if tag for release exists in registry
         uses: ./.github/actions/check-tag
         id: check-tag-release
         with:
-          path: docker/rgb-node
+          path: docker/lnpbp-tools/rgb20
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
   build-release:
@@ -55,7 +55,7 @@ jobs:
     secrets: inherit
     with:
       runs-on: self-hosted
-      path: docker/rgb-node
+      path: docker/lnpbp-tools/rgb20
       target: release
 
   build-nightly:
@@ -65,23 +65,6 @@ jobs:
     secrets: inherit
     with:
       runs-on: self-hosted
-      path: docker/rgb-node
+      path: docker/lnpbp-tools/rgb20
       target: nightly
       commit: ${{ needs.prepare.outputs.commit }}
-
-  build-lnpbp-tools-release:
-    needs: build-release
-    uses: ./.github/workflows/bake.yml
-    secrets: inherit
-    with:
-      path: docker/lnpbp-tools
-      target: release
-
-  build-lnpbp-tools-nightly:
-    needs: build-nightly
-    uses: ./.github/workflows/bake.yml
-    secrets: inherit
-    with:
-      path: docker/lnpbp-tools
-      target: nightly
-      dockerfile: Dockerfile.nightly

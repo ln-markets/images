@@ -12,6 +12,10 @@ on:
       commit:
         required: false
         type: string
+      dockerfile:
+        required: false
+        type: string
+        default: Dockerfile
       runs-on:
         required: false
         type: string
@@ -66,6 +70,7 @@ jobs:
         env:
           COMMIT: ${{ inputs.commit }}
           IMAGE_PATH: ${{ inputs.path }}
+          DOCKERFILE: ${{ inputs.dockerfile }}
         run: |
           docker buildx bake \
           --set *.cache-from="type=local,src=/tmp/.buildx-cache" \

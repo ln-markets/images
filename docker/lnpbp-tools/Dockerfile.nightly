@@ -1,0 +1,25 @@
+FROM lnmarkets/bp-node:nightly              as bp-node
+FROM lnmarkets/lnp-node:nightly             as lnp-node
+FROM lnmarkets/rgb-node:nightly             as rgb-node
+FROM lnmarkets/storm-node:nightly           as storm-node
+FROM lnmarkets/storm-stored:nightly         as storm-stored
+FROM lnmarkets/bp-core:nightly              as bp-core
+FROM lnmarkets/rgb-std:nightly              as rgb-std
+FROM lnmarkets/rgb20:nightly                as rgb20
+FROM lnmarkets/bp-descriptor-wallet:nightly as descriptor-wallet
+
+FROM bitnami/minideb:bullseye as final
+
+ARG BIN_DIR=/bin/
+
+COPY --from=bp-node           $BIN_DIR/bp-cli    $BIN_DIR
+COPY --from=lnp-node          $BIN_DIR/lnp-cli   $BIN_DIR
+COPY --from=rgb-node          $BIN_DIR/rgb-cli   $BIN_DIR
+COPY --from=storm-node        $BIN_DIR/storm-cli $BIN_DIR
+COPY --from=storm-stored      $BIN_DIR/store-cli $BIN_DIR
+COPY --from=bp-core           $BIN_DIR/dbc       $BIN_DIR
+COPY --from=bp-core           $BIN_DIR/seals     $BIN_DIR
+COPY --from=rgb-std           $BIN_DIR/rgb       $BIN_DIR
+COPY --from=rgb20             $BIN_DIR/rgb20     $BIN_DIR
+COPY --from=descriptor-wallet $BIN_DIR/btc-cold  $BIN_DIR
+COPY --from=descriptor-wallet $BIN_DIR/btc-hot   $BIN_DIR

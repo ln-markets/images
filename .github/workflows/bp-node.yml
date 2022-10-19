@@ -42,7 +42,7 @@ jobs:
           tag: ${{ steps.latest-commit.outputs.sha-short }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Check if tag for release exists in registry
-        uses: ./.github/actions/check-tag
+                uses: ./.github/actions/check-tag
         id: check-tag-release
         with:
           path: docker/bp-node
@@ -68,3 +68,20 @@ jobs:
       path: docker/bp-node
       target: nightly
       commit: ${{ needs.prepare.outputs.commit }}
+
+  build-lnpbp-tools-release:
+    needs: build-release
+    uses: ./.github/workflows/bake.yml
+    secrets: inherit
+    with:
+      path: docker/lnpbp-tools
+      target: release
+
+  build-lnpbp-tools-nightly:
+    needs: build-nightly
+    uses: ./.github/workflows/bake.yml
+    secrets: inherit
+    with:
+      path: docker/lnpbp-tools
+      target: nightly
+      dockerfile: Dockerfile.nightly
