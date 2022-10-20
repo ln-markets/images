@@ -30,7 +30,6 @@ services:
     volumes:
       - lnd-bob:/home/.lnd
     command: >-
-      lnd
       --noseedbackup
       --maxpendingchannels=10
       --trickledelay=5000
@@ -54,7 +53,7 @@ services:
       - local
 
   taro-bob:
-    image: tarolocal
+    image: lnmarkets/taro:nightly
     restart: unless-stopped
     volumes:
       - lnd-bob:/home/.lnd
@@ -64,7 +63,6 @@ services:
       --debuglevel=debug
       --lnd.host=lnd-bob:10009
     depends_on:
-      - bitcoin
       - lnd-bob
     networks:
       - local
@@ -75,7 +73,6 @@ services:
     volumes:
       - lnd-alice:/home/.lnd
     command: >-
-      lnd
       --noseedbackup
       --maxpendingchannels=10
       --trickledelay=5000
@@ -109,7 +106,6 @@ services:
       --debuglevel=debug
       --lnd.host=lnd-alice:10009
     depends_on:
-      - bitcoin
       - lnd-alice
     networks:
       - local
