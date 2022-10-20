@@ -37,7 +37,7 @@ runs:
     - name: Check if tag exists
       id: result
       run: |
-        RESULT="$(curl -H "Accept: application/vnd.github+json" -H "Authorization: Bearer ${{ inputs.github-token }}" https://api.github.com/orgs/ln-markets/packages/container/${{ env.NAME }}/versions?per_page=100)"
+        RESULT=$(curl -H "Accept: application/vnd.github+json" -H "Authorization: Bearer ${{ inputs.github-token }}" https://api.github.com/orgs/ln-markets/packages/container/${{ env.NAME }}/versions?per_page=100)
         echo "exists=$(echo $RESULT | jq --arg tag ${{ env.TAG }} -e -r '.[].metadata.container.tags | .[] | select(. == $tag)' &>/dev/null && echo true || echo false)" >> $GITHUB_OUTPUT
       shell: bash
 

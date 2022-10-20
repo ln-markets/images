@@ -19,7 +19,7 @@ RUN git clone https://github.com/LNP-WG/lnp-node ${SRC_DIR} && \
 
 # This image uses cargo-chef to build the application in order to compile
 # the dependencies apart from the main application. This allows the compiled
-# dependencies to be cached in the Docker layer and greatly reduce the
+# dependencies to be cached in the Docker layer and greatly reduces the
 # build time when there isn't any dependency changes.
 #
 # https://github.com/LukeMathWalker/cargo-chef
