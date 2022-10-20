@@ -10,6 +10,11 @@ on:
         options:
           - release
           - nightly
+      force:
+        type: boolean
+        description: Force build
+        required: false
+        default: false
   push:
     branches:
       - master
@@ -60,7 +65,7 @@ jobs:
 
   build-nightly:
     needs: prepare
-    if: ${{ (github.event_name == 'schedule' || github.event.inputs.target == 'nightly') && needs.prepare.outputs.tag-commit-exists == 'false' }}
+    if: ${{ github.event.inputs.force || ((github.event_name == 'push' || github.event.inputs.target == 'release')) }}
     uses: ./.github/workflows/bake.yml
     secrets: inherit
     with:
