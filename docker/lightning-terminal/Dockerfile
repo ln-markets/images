@@ -48,7 +48,7 @@ RUN cd ${LIT_PKG_DIR} &&  \
 
 FROM lnmarkets/base-alpine:3.16
 
-COPY --from=builder /go/bin/litd /bin/
+COPY --from=go /go/bin/litd /bin/
 
 ENV DATA_PATH=/home/.lit
 
