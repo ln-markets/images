@@ -2,6 +2,11 @@ variable "VERSION" {
     default = ""
 }
 
+// Sometimes tag cannot be verified, so we need to skip it
+variable "SKIP_VERIFY_TAG" {
+    default = ""
+}
+
 variable "COMMIT" {
     default = ""
 }

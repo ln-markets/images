@@ -2,6 +2,7 @@ FROM golang:1.19-alpine AS builder
 
 ARG VERSION
 ARG COMMIT
+ARG SKIP_VERIFY_TAG
 
 ENV LOOP_PKG_DIR="/go/src/github.com/lightninglabs/loop"
 
@@ -17,10 +18,9 @@ RUN git clone https://github.com/lightninglabs/loop.git ${LOOP_PKG_DIR} && \
     cd ${LOOP_PKG_DIR}  && \
     if [[ -z "$COMMIT" ]] ; then git checkout ${VERSION} ; else git checkout ${COMMIT} ; fi
 
-# Key is expired
-# RUN gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys DE23E73BFA8A0AD5587D2FCDE80D2F3F311FD87E && \
-#     cd ${LOOP_PKG_DIR}  && \
-#     if [[ -z "$COMMIT" ]] ; then git verify-tag ${VERSION} ; fi
+RUN gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys DE23E73BFA8A0AD5587D2FCDE80D2F3F311FD87E && \
+    cd ${LOOP_PKG_DIR}  && \
+    if [[ -z "$COMMIT" ]] && [[ -ne "$SKIP_VERIFY_TAG"]] ; then git verify-tag ${VERSION} ; fi
 
 RUN cd ${LOOP_PKG_DIR} && make install
 

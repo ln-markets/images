@@ -2,6 +2,7 @@ FROM golang:1.19-alpine AS builder
 
 ARG VERSION
 ARG COMMIT
+ARG SKIP_VERIFY_TAG
 
 ENV POOL_PKG_DIR="/go/src/github.com/lightninglabs/pool"
 
@@ -20,7 +21,7 @@ RUN git clone https://github.com/lightninglabs/pool.git ${POOL_PKG_DIR} && \
 
 RUN gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys F4FC70F07310028424EFC20A8E4256593F177720 && \
     cd ${POOL_PKG_DIR}  && \
-    if [[ -z "$COMMIT" ]] ; then git verify-tag ${VERSION} ; fi
+    if [[ -z "$COMMIT" ]] && [[ -ne "$SKIP_VERIFY_TAG"]] ; then git verify-tag ${VERSION} ; fi
 
 RUN cd ${POOL_PKG_DIR} && make install
 
