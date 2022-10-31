@@ -26,6 +26,9 @@ RUN cd ${FARADAY_PKG_DIR} && make install
 
 FROM lnmarkets/base-alpine:3.16
 
+COPY --from=builder /go/bin/faraday /bin/
+COPY --from=builder /go/bin/frcli /bin/
+
 ENV DATA_PATH=/home/.faraday
 
 EXPOSE 8465
