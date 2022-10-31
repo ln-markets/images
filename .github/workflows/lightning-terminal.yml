@@ -2,6 +2,12 @@ name: lightning-terminal
 
 on:
   workflow_dispatch:
+    inputs:
+      force:
+        type: boolean
+        description: Force build
+        required: false
+        default: false
   push:
     branches:
       - master

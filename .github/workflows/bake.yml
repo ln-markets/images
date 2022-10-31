@@ -66,7 +66,21 @@ jobs:
           --file docker-bake.hcl \
           --print ${{ inputs.target }}
 
+      - name: Run Docker buildx without cache
+        if: ${{ github.event.inputs.force }}
+        env:
+          COMMIT: ${{ inputs.commit }}
+          IMAGE_PATH: ${{ inputs.path }}
+          DOCKERFILE: ${{ inputs.dockerfile }}
+        run: |
+          docker buildx bake \
+          --set *.output="type=registry" \
+          --file ${{ inputs.path }}/image.hcl \
+          --file docker-bake.hcl \
+           ${{ inputs.target }}
+
       - name: Run Docker buildx against latest
+        if: ${{ !github.event.inputs.force }}
         env:
           COMMIT: ${{ inputs.commit }}
           IMAGE_PATH: ${{ inputs.path }}
