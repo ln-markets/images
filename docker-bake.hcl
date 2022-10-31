@@ -53,6 +53,7 @@ target "default" {
     args = {
         "VERSION" = "${VERSION}"
         "COMMIT" = "${COMMIT}"
+        "SKIP_VERIFY_TAG" = "${SKIP_VERIFY_TAG}"
     }
 }
 
