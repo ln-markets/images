@@ -3,6 +3,7 @@ FROM golang:1.19-alpine AS builder
 ARG VERSION
 ARG LND_BUILD_TAGS="autopilotrpc signrpc walletrpc chainrpc invoicesrpc neutrinorpc routerrpc watchtowerrpc monitoring peersrpc kvdb_postrgres kvdb_etcd"
 ARG COMMIT
+ARG SKIP_VERIFY_TAG
 
 ENV LND_PKG_DIR="/go/src/github.com/lightningnetwork/lnd"
 
@@ -18,7 +19,7 @@ RUN git clone https://github.com/lightningnetwork/lnd.git ${LND_PKG_DIR} && \
     cd ${LND_PKG_DIR}  && \
     if [[ -z "$COMMIT" ]] ; then git checkout ${VERSION} ; else git checkout ${COMMIT} ; fi
 
-RUN wget -O - https://raw.githubusercontent.com/lightningnetwork/lnd/master/scripts/keys/roasbeef.asc | gpg --import && \
+RUN wget -O - https://raw.githubusercontent.com/lightningnetwork/lnd/master/scripts/keys/guggero.asc  | gpg --import && \
     cd ${LND_PKG_DIR}  && \
     if [[ -z "$COMMIT" ]] ; then git verify-tag ${VERSION} ; fi
 
