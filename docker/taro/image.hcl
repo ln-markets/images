@@ -1,5 +1,5 @@
 # Release version
-VERSION="v0.1.0-alpha"
+VERSION="v0.1.1-alpha"
 
 # Image config
 NAME="taro"
