@@ -24,7 +24,7 @@ RUN git clone https://github.com/LNP-WG/lnp-node ${SRC_DIR} && \
 #
 # https://github.com/LukeMathWalker/cargo-chef
 # Base image
-FROM lukemathwalker/cargo-chef:0.1.47-rust-1.65.0-slim-bullseye AS chef
+FROM lukemathwalker/cargo-chef:0.1.47-rust-1.65.0-bullseye AS chef
 
 ARG SRC_DIR
 
