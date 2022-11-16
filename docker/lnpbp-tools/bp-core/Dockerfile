@@ -23,7 +23,7 @@ RUN git clone https://github.com/BP-WG/bp-core ${SRC_DIR} && \
 # build time when there isn't any dependency changes.
 #
 # https://github.com/LukeMathWalker/cargo-chef
-FROM lukemathwalker/cargo-chef:0.1.41-rust-1.63.0-slim-bullseye AS chef
+FROM lukemathwalker/cargo-chef:0.1.47-rust-1.65.0-slim-bullseye AS chef
 
 ARG SRC_DIR
 
