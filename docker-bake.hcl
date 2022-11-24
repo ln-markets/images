@@ -26,10 +26,6 @@ variable "DOCKERFILE" {
     default = "Dockerfile"
 }
 
-variable "PLATFORMS" {
-    default = "linux/amd64,linux/arm64"
-}
-
 function "shorten" {
     params = [ string ]
     result = substr(string, 0, 7)
@@ -61,14 +57,18 @@ target "default" {
     }
 }
 
+target "all-platforms" {
+    inherits = [ "default" ]
+    platforms = [ "linux/amd64", "linux/arm64" ]
+}
+
 target "local" {
     inherits = ["default"]
     tags = [ "${NAME}:${VERSION}" ]
 }
 
 target "release" {
-    inherits = [ "default" ]
-    platforms = split(",", PLATFORMS)
+    inherits = ["all-platforms"]
     tags = concat(tag(NAME, "latest"), tag(NAME, VERSION))
     labels = {
         "org.opencontainers.image.version" = "${VERSION}"
@@ -77,8 +77,7 @@ target "release" {
 }
 
 target "nightly" {
-    inherits = [ "default" ]
-    platforms = split(",", PLATFORMS)
+    inherits = ["all-platforms"]
     tags = concat(tag(NAME, "nightly"), tag(NAME, shorten(COMMIT)))
     labels = {
         "org.opencontainers.image.revision" = "${COMMIT}"
