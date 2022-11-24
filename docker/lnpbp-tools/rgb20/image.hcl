@@ -1,5 +1,5 @@
 # Release version
-VERSION="v0.8.0-rc.3"
+VERSION="v0.8.0"
 
 # Image config
 NAME="rgb20"

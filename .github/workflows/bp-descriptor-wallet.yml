@@ -65,7 +65,7 @@ jobs:
 
   build-nightly:
     needs: prepare
-    if: ${{ github.event.inputs.force || ((github.event_name == 'push' || github.event.inputs.target == 'release')) }}
+    if: ${{ (github.event_name == 'schedule' || github.event.inputs.target == 'nightly') && (github.event.inputs.force || needs.prepare.outputs.tag-commit-exists == 'false') }}
     uses: ./.github/workflows/bake.yml
     secrets: inherit
     with:
