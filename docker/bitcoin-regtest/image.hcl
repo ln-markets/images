@@ -1,5 +1,5 @@
 # Release version
-VERSION="23.0"
+VERSION="24.0"
 
 # Image config
 NAME="bitcoin-regtest"
