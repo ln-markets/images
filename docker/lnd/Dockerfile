@@ -1,4 +1,4 @@
-FROM golang:1.19-alpine AS builder
+FROM golang:1.19.3-alpine AS builder
 
 ARG VERSION
 ARG LND_BUILD_TAGS="autopilotrpc signrpc walletrpc chainrpc invoicesrpc neutrinorpc routerrpc watchtowerrpc monitoring peersrpc kvdb_postrgres kvdb_etcd"
@@ -27,7 +27,6 @@ RUN cd ${LND_PKG_DIR} && make install tags="${LND_BUILD_TAGS}"
 
 FROM lnmarkets/base-alpine:3.16
 
-ENV LND_CONF_PATH=/home/.lnd/lnd.conf
 ENV DATA_PATH=/home/.lnd
 
 COPY --from=builder /go/bin/lncli /bin/

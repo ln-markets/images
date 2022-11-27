@@ -1,4 +1,4 @@
-FROM golang:1.19-alpine AS builder
+FROM golang:1.19.3-alpine AS builder
 
 ARG VERSION
 ARG COMMIT
@@ -27,7 +27,7 @@ RUN cd ${POOL_PKG_DIR} && make install
 
 FROM lnmarkets/base-alpine:3.16
 
-ENV POOL_PATH=/home/.pool
+ENV DATA_PATH=/home/.pool
 
 COPY --from=builder /go/bin/pool /bin/
 COPY --from=builder /go/bin/poold /bin/

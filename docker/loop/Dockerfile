@@ -1,4 +1,4 @@
-FROM golang:1.19-alpine AS builder
+FROM golang:1.19.3-alpine AS builder
 
 ARG VERSION
 ARG COMMIT
@@ -26,7 +26,7 @@ RUN cd ${LOOP_PKG_DIR} && make install
 
 FROM lnmarkets/base-alpine:3.16
 
-ENV LOOP_PATH=/home/.loop
+ENV DATA_PATH=/home/.loop
 
 COPY --from=builder /go/bin/loop /bin/
 COPY --from=builder /go/bin/loopd /bin/

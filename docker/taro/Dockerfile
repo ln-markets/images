@@ -1,4 +1,4 @@
-FROM golang:1.19-alpine AS builder
+FROM golang:1.19.3-alpine AS builder
 
 ARG VERSION
 ARG COMMIT
@@ -18,6 +18,8 @@ RUN git clone https://github.com/lightninglabs/taro.git ${TARO_PKG_DIR} && \
 RUN cd ${TARO_PKG_DIR} && make install
 
 FROM lnmarkets/base-alpine:3.16
+
+ENV DATA_PATH=/home/.taro
 
 COPY --from=builder /go/bin/tarod /bin/tarod
 COPY --from=builder /go/bin/tarocli bin/tarocli
