@@ -53,9 +53,7 @@ RUN ./configure \
     --with-daemon \
     --with-zmq
 
-RUN make -j $(nproc) check
-
-RUN make install
+RUN make -j $(nproc) install
 
 RUN strip /opt/build/bin/bitcoind && \
     strip /opt/build/bin/bitcoin-tx && \
