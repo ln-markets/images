@@ -2,44 +2,37 @@
 
 All the Bitcoin and lightning images used by [LN Markets](https://lnmarkets.com)
 
-## Introduction
-
-All images built are based on [Alpine Linux](https://alpinelinux.org/)
-
-Every image run the app as a non root user, you can also set the user id and group id who will run the image and map it to your needs.
+Images are built for __amd64__ and __arm64__ architectures.
 
 ## Configuration
 
-All the images create a user with default user id of `1000` and default group id of `1000`
-
+Every image run the process as `satoshi` user.
+You can change the default user id of `1000` and default group id of `1000`.
 All default user home is set to `/home` to ease the use of volumes and mapping
-
-`PUID` and `PGID` are common to all images
-
-By changing them variables you will also change the owner on the app files
+If you change the `PUID` and `PGID` the `/home` folder permissions will be updated recursively.
 
 | Name | Description                           |
-| ---- | ------------------------------------- |
-| PUID | Set the user id running the app       |
-| PGID | Set the user group id running the app |
+| ----   | ------------------------------------- |
+| `PUID` | Set the user id running the app       |
+| `PGID` | Set the user group id running the app |
 
 ## Images
 
-### Bitcoin
+We have a lot of images, you can find them all in the [Docker Hub](https://hub.docker.com/u/lnmarkets) or on the [GHCR](https://github.com/orgs/ln-markets/packages?repo_name=images).
+Images are compiled and verified from the application github repository.
 
-### Bitcoin Regtest
+__Latest__ tag is the latest stable release from the app repository.
+__nigthly__ tag is the latest commit from the app repository, the nightly images are built every 12 hours.
 
-### Taro
-
-### LND
-
-### Lightning Terminal
-
-### Lndmon
-
-### Loop
-
-### Pool
-
-### Tor
-### Faraday
+| Image | Release/Latest                           | Nightly|
+| ----   | ------------------------------------- | ----|
+| [Bitcoin](https://github.com/bitcoin/bitcoin) | <img alt="Docker Image Version (latest semver)" src="https://img.shields.io/docker/v/lnmarkets/bitcoin"> | None|
+| [Bitcoin Regtest](./docker/bitcoin-regtest/README.md) | <img alt="Docker Image Version (latest semver)" src="https://img.shields.io/docker/v/lnmarkets/bitcoin-regtest"> | None|
+| [Lnd](https://github.com/lightningnetwork/lnd) | <img alt="Docker Image Version (tag latest semver)" src="https://img.shields.io/docker/v/lnmarkets/lnd/latest"> | <img alt="Docker Image Version (latest semver)" src="https://img.shields.io/docker/v/lnmarkets/lnd">|
+| [Taro](https://github.com/lightninglabs/taro) | <img alt="Docker Image Version (tag latest semver)" src="https://img.shields.io/docker/v/lnmarkets/taro/latest"> | <img alt="Docker Image Version (latest semver)" src="https://img.shields.io/docker/v/lnmarkets/taro">|
+| [Loop](https://github.com/lightninglabs/loop) | <img alt="Docker Image Version (tag latest semver)" src="https://img.shields.io/docker/v/lnmarkets/loop/latest"> | None|
+| [Pool](https://github.com/lightninglabs/pool) | <img alt="Docker Image Version (tag latest semver)" src="https://img.shields.io/docker/v/lnmarkets/pool/latest"> | None|
+| [Faraday](https://github.com/lightninglabs/faraday) | <img alt="Docker Image Version (tag latest semver)" src="https://img.shields.io/docker/v/lnmarkets/faraday/latest"> | None|
+| [Lightning Terminal](https://github.com/lightninglabs/lightning-terminal) | <img alt="Docker Image Version (tag latest semver)" src="https://img.shields.io/docker/v/lnmarkets/lightning-terminal/latest"> | None|
+| [Lndmon](https://github.com/lightninglabs/lndmon) | <img alt="Docker Image Version (tag latest semver)" src="https://img.shields.io/docker/v/lnmarkets/lndmon/latest"> | None|
+| [Tor](https://github.com/TheTorProject) | <img alt="Docker Image Version (tag latest semver)" src="https://img.shields.io/docker/v/lnmarkets/tor/latest"> | None|
