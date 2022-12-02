@@ -1,5 +1,5 @@
 # Release version
-VERSION="v0.8.2-alpha"
+VERSION="v0.8.4-alpha"
 
 # Image config
 NAME="lightning-terminal"

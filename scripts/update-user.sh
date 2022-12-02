@@ -35,12 +35,14 @@ if [ $(stat -c %u "/home") -ne $(id -u satoshi) ]; then
 fi
 
 if [ ! -z "${DATA_PATH}" ]; then
-  if [ ! -d "$DATA_PATH" ]; then
-    mkdir -p $DATA_PATH
-  fi
+  DATA_PATH="/home"
+fi
 
-  if [ $(stat -c %u "${DATA_PATH}") -ne $(id -u satoshi) ]; then
-    echo "Updating permissions recursivly on ${DATA_PATH}"
-    chown -R satoshi:satoshi ${DATA_PATH}
-  fi
+if [ ! -d "$DATA_PATH" ]; then
+  mkdir -p $DATA_PATH
+fi
+
+if [ $(stat -c %u "${DATA_PATH}") -ne $(id -u satoshi) ]; then
+  echo "Updating permissions recursivly on ${DATA_PATH}"
+  chown -R satoshi:satoshi ${DATA_PATH}
 fi

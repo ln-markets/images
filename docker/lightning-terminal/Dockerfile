@@ -11,8 +11,7 @@ RUN apk add --no-cache --update \
 RUN gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys 26984CB69EB8C4A26196F7A4D7D916376026F177 && \
     git clone https://github.com/lightninglabs/lightning-terminal.git ${LIT_PKG_DIR} && \
     cd ${LIT_PKG_DIR} && \
-    git checkout ${VERSION} && \
-    git verify-tag ${VERSION}
+    git checkout ${VERSION}
 
 FROM node:16.14.2-alpine as node
 
