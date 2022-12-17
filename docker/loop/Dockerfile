@@ -18,9 +18,11 @@ RUN git clone https://github.com/lightninglabs/loop.git ${LOOP_PKG_DIR} && \
     cd ${LOOP_PKG_DIR}  && \
     if [[ -z "$COMMIT" ]] ; then git checkout ${VERSION} ; else git checkout ${COMMIT} ; fi
 
-RUN gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys DE23E73BFA8A0AD5587D2FCDE80D2F3F311FD87E && \
+RUN wget -O - https://github.com/alexbosworth.gpg | gpg --import && \
     cd ${LOOP_PKG_DIR}  && \
-    if [[ -z "$COMMIT" ]] && [[ -ne "$SKIP_VERIFY_TAG"]] ; then git verify-tag ${VERSION} ; fi
+    if [[ -z "$COMMIT" ]] && [[ -ne "$SKIP_VERIFY_TAG"]] ; then \
+        git verify-tag "${VERSION}" || { git verify-tag --raw "${VERSION}" 2>&1 | grep 'EXPKEYSIG\|VALIDSIG' && echo "Accepting expired key!"; } \
+    ;fi
 
 RUN cd ${LOOP_PKG_DIR} && make install
 
