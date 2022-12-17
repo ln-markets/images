@@ -1,0 +1,24 @@
+name: nostr-ts-relay
+
+on:
+  workflow_dispatch:
+    inputs:
+      force:
+        type: boolean
+        description: Force build
+        required: false
+        default: false
+  push:
+    branches:
+      - master
+    paths:
+      - docker/nostr-ts-relay/**
+
+jobs:
+  build:
+    uses: ./.github/workflows/bake.yml
+    secrets: inherit
+    with:
+      runs-on: self-hosted
+      path: docker/nostr-ts-relay
+      target: release
