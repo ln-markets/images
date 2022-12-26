@@ -1,5 +1,5 @@
 # Release version
-VERSION="0.7.13"
+VERSION="0.7.14"
 
 # Image config
 NAME="nostr-rs-relay"
