@@ -1,5 +1,5 @@
 # Release version
-VERSION="v0.9.0-alpha.1"
+VERSION="v0.9.0-rc.1"
 
 # Image config
 NAME="bp-core"
