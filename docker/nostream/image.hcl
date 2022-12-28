@@ -1,6 +1,6 @@
 # Release version
-VERSION="v1.10.0"
+VERSION="v1.14.0"
 
 # Image config
-NAME="nostr-ts-relay"
+NAME="nostream"
 DESCRIPTION="nostr relay, written in Typescript"
