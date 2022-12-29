@@ -1,5 +1,5 @@
 # Release version
-VERSION="v0.8.2"
+VERSION="v0.8.3"
 
 # Image config
 NAME="rgb-node"
