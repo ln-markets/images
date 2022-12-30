@@ -15,7 +15,7 @@ RUN apk add --no-cache --update \
 
 RUN git clone https://github.com/lightninglabs/lndmon.git ${LNDMON_PKG_DIR} && \
     cd ${LNDMON_PKG_DIR} && \
-    if [[ -z "$COMMIT" ]] ; then git checkout ${VERSION} ; else git checkout ${COMMIT} ; fi
+    if [[ -z "$COMMIT" ]] || [ "$COMMIT" = "null" ] ; then git checkout ${VERSION} ; else git checkout ${COMMIT} ; fi
 
 RUN cd ${LNDMON_PKG_DIR}/cmd/lndmon && go build
 

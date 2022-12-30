@@ -17,11 +17,11 @@ RUN apk add --no-cache --update \
 
 RUN git clone https://github.com/lightningnetwork/lnd.git ${LND_PKG_DIR} && \
     cd ${LND_PKG_DIR}  && \
-    if [[ -z "$COMMIT" ]] ; then git checkout ${VERSION} ; else git checkout ${COMMIT} ; fi
+    if [[ -z "$COMMIT" ]] || [ "$COMMIT" = "null" ] ; then git checkout ${VERSION} ; else git checkout ${COMMIT} ; fi
 
 RUN wget -O - https://raw.githubusercontent.com/lightningnetwork/lnd/master/scripts/keys/roasbeef.asc  | gpg --import && \
     cd ${LND_PKG_DIR}  && \
-    if [[ -z "$COMMIT" ]] ; then git verify-tag ${VERSION} ; fi
+    if [[ -z "$COMMIT" ]] || [ "$COMMIT" = "null" ] ; then git verify-tag ${VERSION} ; fi
 
 RUN cd ${LND_PKG_DIR} && make install tags="${LND_BUILD_TAGS}"
 

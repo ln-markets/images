@@ -16,11 +16,11 @@ RUN apk add --no-cache --update \
 
 RUN git clone https://github.com/lightninglabs/loop.git ${LOOP_PKG_DIR} && \
     cd ${LOOP_PKG_DIR}  && \
-    if [[ -z "$COMMIT" ]] ; then git checkout ${VERSION} ; else git checkout ${COMMIT} ; fi
+    if [[ -z "$COMMIT" ]] || [ "$COMMIT" = "null" ] ; then git checkout ${VERSION} ; else git checkout ${COMMIT} ; fi
 
 RUN wget -O - https://github.com/alexbosworth.gpg | gpg --import && \
     cd ${LOOP_PKG_DIR}  && \
-    if [[ -z "$COMMIT" ]] && [[ -ne "$SKIP_VERIFY_TAG"]] ; then \
+    if [[ -z "$COMMIT" ]] || [ "$COMMIT" = "null" ] && [[ -ne "$SKIP_VERIFY_TAG"]] ; then \
         git verify-tag "${VERSION}" || { git verify-tag --raw "${VERSION}" 2>&1 | grep 'EXPKEYSIG\|VALIDSIG' && echo "Accepting expired key!"; } \
     ;fi
 

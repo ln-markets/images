@@ -16,12 +16,12 @@ RUN apk add --no-cache --update \
 
 RUN git clone https://github.com/lightninglabs/pool.git ${POOL_PKG_DIR} && \
     cd ${POOL_PKG_DIR}  && \
-    if [[ -z "$COMMIT" ]] ; then git checkout ${VERSION} ; else git checkout ${COMMIT} ; fi
+    if [[ -z "$COMMIT" ]] || [ "$COMMIT" = "null" ] ; then git checkout ${VERSION} ; else git checkout ${COMMIT} ; fi
 
 
 RUN gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys F4FC70F07310028424EFC20A8E4256593F177720 && \
     cd ${POOL_PKG_DIR}  && \
-    if [[ -z "$COMMIT" ]] && [[ -ne "$SKIP_VERIFY_TAG"]] ; then git verify-tag ${VERSION} ; fi
+    if [[ -z "$COMMIT" ]] || [ "$COMMIT" = "null" ] && [[ -ne "$SKIP_VERIFY_TAG"]] ; then git verify-tag ${VERSION} ; fi
 
 RUN cd ${POOL_PKG_DIR} && make install
 
