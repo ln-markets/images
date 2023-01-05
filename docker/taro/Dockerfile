@@ -13,7 +13,7 @@ RUN apk add --no-cache --update \
 
 RUN git clone https://github.com/lightninglabs/taro.git ${TARO_PKG_DIR} && \
     cd ${TARO_PKG_DIR}  && \
-    if [[ -z "$COMMIT" ]] || [ "$COMMIT" = "null" ] ; then git checkout ${VERSION} ; else git checkout ${COMMIT} ; fi
+    if [[ -z "$COMMIT" ]] ; then git checkout ${VERSION} ; else git checkout ${COMMIT} ; fi
 
 RUN cd ${TARO_PKG_DIR} && make install
 

@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y git
 
 RUN git clone https://github.com/RGB-WG/rgb-std ${SRC_DIR} && \
     cd ${SRC_DIR}  && \
-    if [[ -z "$COMMIT" ]] || [ "$COMMIT" = "null" ] ; then git checkout ${VERSION} ; else git checkout ${COMMIT} ; fi
+    if [[ -z "$COMMIT" ]] ; then git checkout ${VERSION} ; else git checkout ${COMMIT} ; fi
 
 # This image uses cargo-chef to build the application in order to compile
 # the dependencies apart from the main application. This allows the compiled

@@ -8,7 +8,7 @@ RUN apk add --no-cache git
 WORKDIR /build
 
 RUN git clone https://github.com/Cameri/nostream.git /build && \
-    if [[ -z "$COMMIT" ]] || [ "$COMMIT" = "null" ] ; then git checkout ${VERSION} ; else git checkout ${COMMIT} ; fi
+    if [[ -z "$COMMIT" ]] ; then git checkout ${VERSION} ; else git checkout ${COMMIT} ; fi
 
 RUN npm install
 
