@@ -1,5 +1,5 @@
-name: 'Get latest commit'
-description: 'Get the latest commit of a given repo and branch'
+name: "Get latest commit"
+description: "Get the latest commit of a given repo and branch"
 
 inputs:
   repo:
@@ -27,6 +27,9 @@ runs:
       uses: sergeysova/jq-action@v2
       with:
         cmd: echo "sha=$(curl -s https://api.github.com/repos/${{ inputs.repo }}/commits/${{ inputs.branch }} | jq -r .sha)" >> $GITHUB_OUTPUT
+    - name: Check that fetched commit isn't null
+      run: if [[ ${{ steps.commit.outputs.sha }} = 'null' ]]; then echo "Error getting latest commits for branch ${{ inputs.branch }}"; exit 1; fi
+      shell: bash
     - name: Shorten commit sha
       id: shorten
       run: echo "sha-short=$(echo ${{ steps.commit.outputs.sha }} | cut -c1-7)"  >> $GITHUB_OUTPUT
