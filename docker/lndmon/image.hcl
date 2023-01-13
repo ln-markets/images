@@ -1,5 +1,5 @@
 # Release version
-VERSION="v0.2.1"
+VERSION="v0.2.2"
 
 # Image config
 NAME="lndmon"
