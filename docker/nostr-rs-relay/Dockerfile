@@ -1,8 +1,8 @@
 ARG VERSION
 ARG COMMIT
 
-ARG SRC_DIR=/usr/local/src/lnp
-ARG BUILDER_DIR=/srv/lnp
+ARG SRC_DIR=/usr/local/src/nostr-rs-relay
+ARG BUILDER_DIR=/srv/nostr-rs-relay
 
 # Clone the repository and checkout the specified commit or version
 FROM debian:bullseye-slim as repo
@@ -13,7 +13,7 @@ ARG COMMIT
 
 RUN apt-get update && apt-get install -y git
 
-RUN git clone https://github.com/LNP-WG/lnp-node ${SRC_DIR} && \
+RUN git clone https://github.com/scsibug/nostr-rs-relay ${SRC_DIR} && \
     cd ${SRC_DIR}  && \
     if [[ -z "$COMMIT" ]] ; then git checkout ${VERSION} ; else git checkout ${COMMIT} ; fi
 
@@ -27,8 +27,6 @@ RUN git clone https://github.com/LNP-WG/lnp-node ${SRC_DIR} && \
 FROM lukemathwalker/cargo-chef:0.1.47-rust-1.65.0-bullseye AS chef
 
 ARG SRC_DIR
-
-RUN apt-get update && apt-get install -y build-essential
 
 WORKDIR $SRC_DIR
 
@@ -56,7 +54,7 @@ RUN cargo chef cook --release --recipe-path recipe.json --target-dir "${BUILDER_
 COPY --from=repo $SRC_DIR $SRC_DIR
 RUN cargo build --release --target-dir "${BUILDER_DIR}" --bins --all-features
 
-# Final image with binaries
+# Final image with binary
 FROM bitnami/minideb:bullseye as final
 
 ARG BUILDER_DIR
@@ -65,20 +63,31 @@ RUN addgroup --gid 1000 satoshi && \
     adduser --home /home --uid 1000 --gid 1000 satoshi && \
     chown -R satoshi:satoshi /home
 
-COPY --from=builder --chown=satoshi:satoshi "${BUILDER_DIR}/release/channeld" /bin/
-COPY --from=builder --chown=satoshi:satoshi "${BUILDER_DIR}/release/lnp-cli" /bin/
-COPY --from=builder --chown=satoshi:satoshi "${BUILDER_DIR}/release/lnpd" /bin/
-COPY --from=builder --chown=satoshi:satoshi "${BUILDER_DIR}/release/peerd" /bin/
-COPY --from=builder --chown=satoshi:satoshi "${BUILDER_DIR}/release/routed" /bin/
-COPY --from=builder --chown=satoshi:satoshi "${BUILDER_DIR}/release/signd" /bin/
-COPY --from=builder --chown=satoshi:satoshi "${BUILDER_DIR}/release/watchd" /bin/
+RUN apt-get update \
+    && apt-get install -y ca-certificates tzdata sqlite3 libc6 \
+    && rm -rf /var/lib/apt/lists/*
+
+ARG APP=/home/.nostr-rs-relay
+ARG APP_DATA=/home/.nostr-rs-relay/db
+
+RUN mkdir -p ${APP} ${APP_DATA}
+
+COPY --from=builder --chown=satoshi:satoshi "${BUILDER_DIR}/release/nostr-rs-relay" ${APP}
+
+RUN chown -R satoshi:satoshi ${APP} ${APP_DATA}
+
+WORKDIR $APP
+
+ENV TZ=Etc/UTC
+ENV RUST_LOG=info,nostr_rs_relay=info
+ENV APP=${APP}
+ENV APP_DATA=${APP_DATA}
 
 COPY ./scripts/update-user.sh /docker/update-user.sh
 COPY ./scripts/entrypoint.sh /docker/entrypoint.sh
 
-EXPOSE 9735
-EXPOSE 62962
+EXPOSE 8080
 
-ENTRYPOINT [ "/docker/entrypoint.sh", "lnpd"]
+ENTRYPOINT [ "/docker/entrypoint.sh", "${APP}/nostr-rs-relay"]
 
-CMD ["-vvv", "--data-dir", "/home/.lnpd"]
+CMD ["--db", "${APP_DATA}"]

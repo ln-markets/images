@@ -1,0 +1,24 @@
+name: nostream
+
+on:
+  workflow_dispatch:
+    inputs:
+      force:
+        type: boolean
+        description: Force build
+        required: false
+        default: false
+  push:
+    branches:
+      - master
+    paths:
+      - docker/nostream/**
+
+jobs:
+  build:
+    uses: ./.github/workflows/bake.yml
+    secrets: inherit
+    with:
+      runs-on: self-hosted
+      path: docker/nostream
+      target: release
