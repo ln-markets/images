@@ -1,5 +1,5 @@
 # Release version
-VERSION="v0.6.1-beta"
+VERSION="v0.6.2-beta"
 
 # Image config
 NAME="pool"
