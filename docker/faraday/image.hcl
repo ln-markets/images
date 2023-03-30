@@ -1,5 +1,5 @@
 # Release version
-VERSION="v0.2.9-alpha"
+VERSION="v0.2.10-alpha"
 
 # Image config
 NAME="faraday"
