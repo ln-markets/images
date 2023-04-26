@@ -1,5 +1,5 @@
 # Release version
-VERSION="v0.16.0-beta"
+VERSION="v0.16.1-beta"
 
 # Image config
 NAME="lnd"
