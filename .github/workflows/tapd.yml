@@ -1,4 +1,4 @@
-name: taro
+name: tapd
 
 on:
   workflow_dispatch:
@@ -19,7 +19,7 @@ on:
     branches:
       - master
     paths:
-      - docker/taro/**
+      - docker/tapd/**
   schedule:
     - cron: "0 8,20 * * *"
 
@@ -37,20 +37,20 @@ jobs:
         uses: ./.github/actions/latest-commit
         id: latest-commit
         with:
-          repo: lightninglabs/taro
+          repo: lightninglabs/taproot-assets
           branch: main
       - name: Check if tag for latest commit exists in registry
         uses: ./.github/actions/check-tag
         id: check-tag-commit
         with:
-          path: docker/taro
+          path: docker/tapd
           tag: ${{ steps.latest-commit.outputs.sha-short }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Check if tag for release exists in registry
         uses: ./.github/actions/check-tag
         id: check-tag-release
         with:
-          path: docker/taro
+          path: docker/tapd
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
   build-release:
@@ -59,7 +59,7 @@ jobs:
     uses: ./.github/workflows/bake.yml
     secrets: inherit
     with:
-      path: docker/taro
+      path: docker/tapd
       target: release
 
   build-nightly:
@@ -68,6 +68,6 @@ jobs:
     uses: ./.github/workflows/bake.yml
     secrets: inherit
     with:
-      path: docker/taro
+      path: docker/tapd
       target: nightly
       commit: ${{ needs.prepare.outputs.commit }}

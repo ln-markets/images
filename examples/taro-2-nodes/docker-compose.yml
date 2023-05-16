@@ -11,9 +11,9 @@ networks:
 volumes:
   bitcoin:
   lnd-bob:
-  taro-bob:
+  tapd-bob:
   lnd-alice:
-  taro-alice:
+  tapd-alice:
 
 services:
   bitcoin:
@@ -52,12 +52,12 @@ services:
     networks:
       - local
 
-  taro-bob:
-    image: lnmarkets/taro:nightly
+  tapd-bob:
+    image: lnmarkets/tapd:nightly
     restart: unless-stopped
     volumes:
       - lnd-bob:/home/.lnd
-      - taro-bob:/home
+      - tapd-bob:/home
     command: >-
       --network=regtest
       --debuglevel=debug
@@ -95,12 +95,12 @@ services:
     networks:
       - local
 
-  taro-alice:
-    image: lnmarkets/taro:nightly
+  tapd-alice:
+    image: lnmarkets/tapd:nightly
     restart: unless-stopped
     volumes:
       - lnd-alice:/home/.lnd
-      - taro-alice:/home
+      - tapd-alice:/home
     command: >-
       --network=regtest
       --debuglevel=debug
