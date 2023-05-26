@@ -1,5 +1,5 @@
 # Release version
-VERSION="24.1"
+VERSION="25.0"
 
 # Image config
 NAME="bitcoin"
