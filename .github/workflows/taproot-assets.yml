@@ -1,4 +1,4 @@
-name: tapd
+name: taproot-assets
 
 on:
   workflow_dispatch:
@@ -19,7 +19,7 @@ on:
     branches:
       - master
     paths:
-      - docker/tapd/**
+      - docker/taproot-assets/**
   schedule:
     - cron: "0 8,20 * * *"
 
@@ -43,14 +43,14 @@ jobs:
         uses: ./.github/actions/check-tag
         id: check-tag-commit
         with:
-          path: docker/tapd
+          path: docker/taproot-assets
           tag: ${{ steps.latest-commit.outputs.sha-short }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Check if tag for release exists in registry
         uses: ./.github/actions/check-tag
         id: check-tag-release
         with:
-          path: docker/tapd
+          path: docker/taproot-assets
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
   build-release:
@@ -59,7 +59,7 @@ jobs:
     uses: ./.github/workflows/bake.yml
     secrets: inherit
     with:
-      path: docker/tapd
+      path: docker/taproot-assets
       target: release
 
   build-nightly:
@@ -68,6 +68,6 @@ jobs:
     uses: ./.github/workflows/bake.yml
     secrets: inherit
     with:
-      path: docker/tapd
+      path: docker/taproot-assets
       target: nightly
       commit: ${{ needs.prepare.outputs.commit }}

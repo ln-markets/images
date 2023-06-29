@@ -5,17 +5,17 @@ ARG COMMIT
 
 ENV GODEBUG netdns=cgo
 ENV GO111MODULE on
-ENV TAPD_PKG_DIR="/go/src/github.com/lightninglabs/taproot-assets"
+ENV TAPROOT_ASSETS_PKG_DIR="/go/src/github.com/lightninglabs/taproot-assets"
 
 RUN apk add --no-cache --update \
     make \
     git
 
-RUN git clone https://github.com/lightninglabs/taproot-assets.git ${TAPD_PKG_DIR} && \
-    cd ${TAPD_PKG_DIR}  && \
+RUN git clone https://github.com/lightninglabs/taproot-assets.git ${TAPROOT_ASSETS_PKG_DIR} && \
+    cd ${TAPROOT_ASSETS_PKG_DIR}  && \
     if [[ -z "$COMMIT" ]] ; then git checkout ${VERSION} ; else git checkout ${COMMIT} ; fi
 
-RUN cd ${TAPD_PKG_DIR} && make install
+RUN cd ${TAPROOT_ASSETS_PKG_DIR} && make install
 
 FROM lnmarkets/base-alpine:3.16
 
