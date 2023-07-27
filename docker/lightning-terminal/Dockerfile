@@ -8,7 +8,7 @@ RUN apk add --no-cache --update \
     git \
     gnupg
 
-RUN gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys 26984CB69EB8C4A26196F7A4D7D916376026F177 && \
+RUN gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys 187F6ADD93AE3B0CF335AA6AB984570980684DCC && \
     git clone https://github.com/lightninglabs/lightning-terminal.git ${LIT_PKG_DIR} && \
     cd ${LIT_PKG_DIR} && \
     git checkout ${VERSION}
