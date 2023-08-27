@@ -39,6 +39,7 @@ ENV GODEBUG netdns=cgo
 ENV GO111MODULE on
 
 RUN apk add --no-cache --update \
+    alpine-sdk \
     git \
     make
 
