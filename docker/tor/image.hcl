@@ -1,5 +1,5 @@
 # Release version
-VERSION="0.4.7.10-r0"
+VERSION="0.4.8.4-r0"
 
 # Image config
 NAME="tor"
