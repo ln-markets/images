@@ -1,6 +1,6 @@
 ARG VERSION
 
-FROM node:${VERSION}-alpine3.16
+FROM node:${VERSION}-alpine3.18
 
 RUN apk add --no-cache --update \
     dumb-init \
