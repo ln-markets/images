@@ -1,7 +1,7 @@
 ARG VERSION
 ARG COMMIT
 
-FROM node:18-alpine3.16 AS build
+FROM node:18-alpine3.18 AS build
 
 RUN apk add --no-cache git
 

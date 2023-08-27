@@ -17,7 +17,7 @@ RUN git clone https://github.com/lightninglabs/taproot-assets.git ${TAPROOT_ASSE
 
 RUN cd ${TAPROOT_ASSETS_PKG_DIR} && make install
 
-FROM lnmarkets/base-alpine:3.16
+FROM lnmarkets/base-alpine:3.18
 
 ENV DATA_PATH=/home/.tapd
 

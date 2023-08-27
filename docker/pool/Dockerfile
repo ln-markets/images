@@ -25,7 +25,7 @@ RUN gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys F4FC70F07310028424EF
 
 RUN cd ${POOL_PKG_DIR} && make install
 
-FROM lnmarkets/base-alpine:3.16
+FROM lnmarkets/base-alpine:3.18
 
 ENV DATA_PATH=/home/.pool
 

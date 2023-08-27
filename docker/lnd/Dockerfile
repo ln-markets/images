@@ -25,7 +25,7 @@ RUN wget -O - https://raw.githubusercontent.com/lightningnetwork/lnd/master/scri
 
 RUN cd ${LND_PKG_DIR} && make install tags="${LND_BUILD_TAGS}"
 
-FROM lnmarkets/base-alpine:3.16
+FROM lnmarkets/base-alpine:3.18
 
 ENV DATA_PATH=/home/.lnd
 

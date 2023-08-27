@@ -1,6 +1,6 @@
 FROM lncm/berkeleydb:v4.8.30.NC AS berkleydb
 
-FROM alpine:3.16 AS builder
+FROM alpine:3.18 AS builder
 
 ARG VERSION
 
@@ -59,7 +59,7 @@ RUN strip /opt/build/bin/bitcoind && \
     strip /opt/build/bin/bitcoin-tx && \
     strip /opt/build/bin/bitcoin-wallet
 
-FROM lnmarkets/base-alpine:3.16
+FROM lnmarkets/base-alpine:3.18
 
 ENV DATA_PATH=/home/.bitcoin
 

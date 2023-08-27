@@ -46,7 +46,7 @@ RUN apk add --no-cache --update \
 RUN cd ${LIT_PKG_DIR} &&  \
     make go-install PUBLIC_URL=$PUBLIC_URL
 
-FROM lnmarkets/base-alpine:3.16
+FROM lnmarkets/base-alpine:3.18
 
 COPY --from=go /go/bin/litd /bin/
 

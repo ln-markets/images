@@ -26,7 +26,7 @@ RUN wget -O - https://github.com/bhandras.gpg | gpg --import && \
 
 RUN cd ${LOOP_PKG_DIR} && make install
 
-FROM lnmarkets/base-alpine:3.16
+FROM lnmarkets/base-alpine:3.18
 
 ENV DATA_PATH=/home/.loop
 
