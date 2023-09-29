@@ -2,16 +2,21 @@ ARG VERSION
 
 FROM lnmarkets/bitcoin:${VERSION}
 
-ENV CRON_MINE_BTC=1
+ENV MINING=true
+ENV MININING_INTERVAL=30
 
-RUN apk add --update --no-cache \
-    dcron \
-    bash \
-    libcap
+RUN apk add --update --no-cache bash libcap
 
-RUN chown satoshi:satoshi /usr/sbin/crond \
-    && setcap cap_setgid=ep /usr/sbin/crond
+COPY --chown=satoshi:satoshi docker/bitcoin-regtest/bitcoin.conf /home/.bitcoin/bitcoin.conf
 
-COPY docker/bitcoin-regtest/regtest.sh ./docker/regtest.sh
+COPY --chown=satoshi:satoshi docker/bitcoin-regtest/mine.sh /docker/mine.sh
 
-ENTRYPOINT ["/docker/regtest.sh"]
+COPY --chown=satoshi:satoshi docker/bitcoin-regtest/entrypoint.sh /docker/entrypoint.sh
+
+EXPOSE 18443 18444 28334 28335
+
+USER satoshi
+
+ENTRYPOINT ["/docker/entrypoint.sh"]
+
+CMD ["bitcoind"]
