@@ -27,7 +27,7 @@ RUN yarn config set registry "http://registry.npmjs.org" && \
     yarn install --frozen-lockfile && \
     yarn build
 
-FROM golang:1.19-alpine AS go
+FROM golang:1.21-alpine AS go
 
 ARG PUBLIC_URL=""
 
