@@ -1,5 +1,5 @@
 # Release version
-VERSION="v0.2.3"
+VERSION="v0.3.0-alpha.rc1"
 
 # Image config
 NAME="taproot-assets"

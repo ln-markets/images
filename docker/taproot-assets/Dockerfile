@@ -1,4 +1,4 @@
-FROM golang:1.19.9-alpine AS builder
+FROM golang:1.21.0-alpine AS builder
 
 ARG VERSION
 ARG COMMIT
@@ -9,7 +9,8 @@ ENV TAPROOT_ASSETS_PKG_DIR="/go/src/github.com/lightninglabs/taproot-assets"
 
 RUN apk add --no-cache --update \
     make \
-    git
+    git \
+    gcc
 
 RUN git clone https://github.com/lightninglabs/taproot-assets.git ${TAPROOT_ASSETS_PKG_DIR} && \
     cd ${TAPROOT_ASSETS_PKG_DIR}  && \
