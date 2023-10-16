@@ -15,7 +15,7 @@ RUN git clone https://github.com/lightninglabs/taproot-assets.git ${PKG_DIR} && 
     cd ${PKG_DIR}  && \
     if [[ -z "$COMMIT" ]] ; then git checkout ${VERSION} ; else git checkout ${COMMIT} ; fi
 
-RUN cd ${PKG_DIR} && if [[ -z "$COMMIT" ]] ; then make release-install ; else make install ; fi
+RUN cd ${PKG_DIR} && make release-install
 
 FROM lnmarkets/base-alpine:3.18
 
