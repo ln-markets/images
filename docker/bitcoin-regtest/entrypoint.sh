@@ -17,7 +17,7 @@ create_and_load_wallet() {
 # Mine blocks every 30 seconds
 mine_btc() {
     while true; do
-        sleep $MININING_INTERVAL && /docker/mine.sh
+        sleep $MININING_INTERVAL && mine
     done
 }
 

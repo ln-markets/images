@@ -9,7 +9,7 @@ RUN apk add --update --no-cache bash libcap
 
 COPY --chown=satoshi:satoshi docker/bitcoin-regtest/bitcoin.conf /home/.bitcoin/bitcoin.conf
 
-COPY --chown=satoshi:satoshi docker/bitcoin-regtest/mine.sh /docker/mine.sh
+COPY --chown=satoshi:satoshi docker/bitcoin-regtest/mine.sh /usr/bin/mine
 
 COPY --chown=satoshi:satoshi docker/bitcoin-regtest/entrypoint.sh /docker/entrypoint.sh
 
