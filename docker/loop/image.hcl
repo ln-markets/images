@@ -1,5 +1,5 @@
 # Release version
-VERSION="v0.26.4-beta"
+VERSION="v0.26.5-beta"
 
 # Image config
 NAME="loop"
