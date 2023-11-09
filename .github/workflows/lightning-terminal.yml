@@ -17,9 +17,6 @@ on:
 jobs:
   build:
     uses: ./.github/workflows/bake.yml    
-    permissions:
-      contents: read
-      packages: write
     secrets: inherit
     with:
       path: docker/lightning-terminal
