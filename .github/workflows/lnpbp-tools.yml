@@ -13,7 +13,10 @@ on:
 jobs:
   build-release:
     if: ${{ github.event.inputs.target == 'release' }}
-    uses: ./.github/workflows/bake.yml
+    uses: ./.github/workflows/bake.yml    
+    permissions:
+      contents: read
+      packages: write
     secrets: inherit
     with:
       path: docker/lnpbp-tools
@@ -21,7 +24,10 @@ jobs:
 
   build-nightly:
     if: ${{ github.event.inputs.target == 'nightly' }}
-    uses: ./.github/workflows/bake.yml
+    uses: ./.github/workflows/bake.yml    
+    permissions:
+      contents: read
+      packages: write
     secrets: inherit
     with:
       path: docker/lnpbp-tools

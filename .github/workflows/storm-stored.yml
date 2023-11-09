@@ -56,7 +56,10 @@ jobs:
   build-release:
     needs: prepare
     if: ${{ (github.event_name == 'push' || github.event.inputs.target == 'release') }}
-    uses: ./.github/workflows/bake.yml
+    uses: ./.github/workflows/bake.yml    
+    permissions:
+      contents: read
+      packages: write
     secrets: inherit
     with:
       runs-on: self-hosted
@@ -66,7 +69,10 @@ jobs:
   build-nightly:
     needs: prepare
     if: ${{ (github.event_name == 'schedule' || github.event.inputs.target == 'nightly') && (github.event.inputs.force || needs.prepare.outputs.tag-commit-exists == 'false') }}
-    uses: ./.github/workflows/bake.yml
+    uses: ./.github/workflows/bake.yml    
+    permissions:
+      contents: read
+      packages: write
     secrets: inherit
     with:
       runs-on: self-hosted
@@ -76,7 +82,10 @@ jobs:
 
   build-lnpbp-tools-release:
     needs: build-release
-    uses: ./.github/workflows/bake.yml
+    uses: ./.github/workflows/bake.yml    
+    permissions:
+      contents: read
+      packages: write
     secrets: inherit
     with:
       path: docker/lnpbp-tools
@@ -84,7 +93,10 @@ jobs:
 
   build-lnpbp-tools-nightly:
     needs: build-nightly
-    uses: ./.github/workflows/bake.yml
+    uses: ./.github/workflows/bake.yml    
+    permissions:
+      contents: read
+      packages: write
     secrets: inherit
     with:
       path: docker/lnpbp-tools
