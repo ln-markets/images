@@ -33,12 +33,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
       - name: Get latest commit
         uses: ./.github/actions/latest-commit
         id: latest-commit
         with:
           repo: lightninglabs/taproot-assets
           branch: main
+
       - name: Check if tag for latest commit exists in registry
         uses: ./.github/actions/check-tag
         id: check-tag-commit
@@ -46,6 +48,7 @@ jobs:
           path: docker/taproot-assets
           tag: ${{ steps.latest-commit.outputs.sha-short }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Check if tag for release exists in registry
         uses: ./.github/actions/check-tag
         id: check-tag-release
