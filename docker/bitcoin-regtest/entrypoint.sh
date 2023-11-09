@@ -14,8 +14,9 @@ create_and_load_wallet() {
     bitcoin-cli -regtest loadwallet satoshi 2>/dev/null | true
 }
 
-# Mine blocks every 30 seconds
+# Mine 1 block every 30 seconds
 mine_btc() {
+    sleep 5 && mine -b 101
     while true; do
         sleep $MININING_INTERVAL && mine
     done
