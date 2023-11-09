@@ -1,50 +1,39 @@
-FROM alpine AS git
-
 ARG VERSION
+ARG PUBLIC_URL=""
 
-ENV LIT_PKG_DIR="/go/src/github.com/lightninglabs/lightning-terminal"
+FROM alpine AS git
 
 RUN apk add --no-cache --update \
     git \
     gnupg
 
 RUN gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys 187F6ADD93AE3B0CF335AA6AB984570980684DCC && \
-    git clone https://github.com/lightninglabs/lightning-terminal.git ${LIT_PKG_DIR} && \
-    cd ${LIT_PKG_DIR} && \
+    git clone https://github.com/lightninglabs/lightning-terminal.git /go/src/github.com/lightninglabs/lightning-terminal && \
+    cd /go/src/github.com/lightninglabs/lightning-terminal && \
     git checkout ${VERSION}
 
-FROM node:16.14.2-alpine as node
+FROM node:20.9.0-alpine as node
 
-ARG PUBLIC_URL=""
-
-ENV LIT_PKG_DIR="/go/src/github.com/lightninglabs/lightning-terminal"
-
-COPY --from=git ${LIT_PKG_DIR} ${LIT_PKG_DIR}
+COPY --from=git /go/src/github.com/lightninglabs/lightning-terminal /go/src/github.com/lightninglabs/lightning-terminal
 
 RUN yarn config set registry "http://registry.npmjs.org" && \
     echo --network-timeout 1000000 >> ~/.yarnrc && \
-    cd ${LIT_PKG_DIR}/app && \
+    cd /go/src/github.com/lightninglabs/lightning-terminal/app && \
     yarn install --frozen-lockfile && \
     yarn build
 
 FROM golang:1.21-alpine AS go
 
-ARG PUBLIC_URL=""
-
-ENV LIT_PKG_DIR="/go/src/github.com/lightninglabs/lightning-terminal"
-
-COPY --from=node ${LIT_PKG_DIR} ${LIT_PKG_DIR}
-
 ENV GODEBUG netdns=cgo
-ENV GO111MODULE on
+
+COPY --from=node /go/src/github.com/lightninglabs/lightning-terminal /go/src/github.com/lightninglabs/lightning-terminal
 
 RUN apk add --no-cache --update \
     alpine-sdk \
     git \
     make
 
-RUN cd ${LIT_PKG_DIR} &&  \
-    make go-install PUBLIC_URL=$PUBLIC_URL
+RUN cd /go/src/github.com/lightninglabs/lightning-terminal && make go-install PUBLIC_URL=$PUBLIC_URL
 
 FROM lnmarkets/base-alpine:3.18
 
