@@ -1,7 +1,7 @@
 FROM golang:1.21-alpine AS builder
 
 ARG VERSION
-ARG LND_BUILD_TAGS="autopilotrpc signrpc walletrpc chainrpc invoicesrpc neutrinorpc routerrpc watchtowerrpc monitoring peersrpc kvdb_postrgres kvdb_etcd"
+ARG LND_BUILD_TAGS="autopilotrpc signrpc walletrpc chainrpc invoicesrpc neutrinorpc routerrpc watchtowerrpc monitoring peersrpc kvdb_postrgres kvdb_etcd kvdb_sqlite"
 ARG COMMIT
 ARG SKIP_VERIFY_TAG
 
