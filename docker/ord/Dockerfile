@@ -21,4 +21,6 @@ ENV RUST_LOG=info
 
 COPY --from=builder /app/ord/target/release/ord /usr/bin/ord
 
+EXPOSE 8080
+
 ENTRYPOINT [ "/docker/entrypoint.sh", "ord" ]
