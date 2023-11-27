@@ -1,4 +1,4 @@
-name: nostream
+name: ord
 
 on:
   workflow_dispatch:
@@ -12,13 +12,12 @@ on:
     branches:
       - master
     paths:
-      - docker/nostream/**
+      - docker/ord/**
 
 jobs:
   build:
     uses: ./.github/workflows/bake.yml    
     secrets: inherit
     with:
-      runs-on: self-hosted
-      path: docker/nostream
+      path: docker/ord
       target: release
