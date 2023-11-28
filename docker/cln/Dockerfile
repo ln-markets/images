@@ -1,5 +1,6 @@
 ARG VERSION
 
+# TODO: build it ourselves
 FROM elementsproject/lightningd:${VERSION} as builder
 
 FROM lnmarkets/debian:bookworm
