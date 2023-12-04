@@ -6,8 +6,8 @@ The node will mine the 101 first blocks instantly right after initialization, so
 
 You can disable the auto-mining by setting the `CRON_MINE_BTC` env variable to `false`. Note that it also disables the mining of the first 101 blocks.
 
-The bitcoin node rpc is listening on port `18443`, to connect to the rpc use `satoshi` as username and `satoshi` as password.
-The zmq port is `28332` for all topics.
+The bitcoin node rpc is listening on port `18443`, to connect to the rpc use `satoshi` as username and `satoshi` as password
+The zmq port are `28334` for raw blocks and `28335` for raw transactions
 
 You can use the `mine` command to mine a specific amount of blocks
 
