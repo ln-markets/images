@@ -16,7 +16,10 @@ on:
 
 jobs:
   build:
-    uses: ./.github/workflows/bake.yml    
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/bake.yml
     secrets: inherit
     with:
       path: docker/lndmon

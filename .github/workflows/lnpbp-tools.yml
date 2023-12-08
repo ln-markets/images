@@ -7,21 +7,27 @@ on:
         description: Target
         required: true
         options:
-        - release
-        - nightly
+          - release
+          - nightly
 
 jobs:
   build-release:
+    permissions:
+      contents: read
+      packages: write
     if: ${{ github.event.inputs.target == 'release' }}
-    uses: ./.github/workflows/bake.yml    
+    uses: ./.github/workflows/bake.yml
     secrets: inherit
     with:
       path: docker/lnpbp-tools
       target: release
 
   build-nightly:
+    permissions:
+      contents: read
+      packages: write
     if: ${{ github.event.inputs.target == 'nightly' }}
-    uses: ./.github/workflows/bake.yml    
+    uses: ./.github/workflows/bake.yml
     secrets: inherit
     with:
       path: docker/lnpbp-tools

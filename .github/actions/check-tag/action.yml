@@ -1,5 +1,5 @@
-name: 'Check if tag exists'
-description: 'Fetch available tags for a container and check if a given tag exists (defaults to image version)'
+name: "Check if tag exists"
+description: "Fetch available tags for a container and check if a given tag exists (defaults to image version)"
 
 inputs:
   path:
@@ -9,7 +9,7 @@ inputs:
     required: false
     type: string
   github-token:
-    description: 'GitHub token'
+    description: "GitHub token"
     required: true
     type: string
 

@@ -58,8 +58,11 @@ jobs:
 
   build-release:
     needs: prepare
+    permissions:
+      contents: read
+      packages: write
     if: ${{ (github.event_name == 'push' || github.event.inputs.target == 'release') }}
-    uses: ./.github/workflows/bake.yml    
+    uses: ./.github/workflows/bake.yml
     secrets: inherit
     with:
       path: docker/taproot-assets
@@ -67,8 +70,11 @@ jobs:
 
   build-nightly:
     needs: prepare
+    permissions:
+      contents: read
+      packages: write
     if: ${{ (github.event_name == 'schedule' || github.event.inputs.target == 'nightly') && (github.event.inputs.force || needs.prepare.outputs.tag-commit-exists == 'false') }}
-    uses: ./.github/workflows/bake.yml    
+    uses: ./.github/workflows/bake.yml
     secrets: inherit
     with:
       path: docker/taproot-assets

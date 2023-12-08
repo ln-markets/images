@@ -33,12 +33,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Get latest commit
         uses: ./.github/actions/latest-commit
         id: latest-commit
         with:
           repo: lightningnetwork/lnd
           branch: master
+
       - name: Check if tag for latest commit exists in registry
         uses: ./.github/actions/check-tag
         id: check-tag-commit
@@ -46,6 +48,7 @@ jobs:
           path: docker/lnd
           tag: ${{ steps.latest-commit.outputs.sha-short }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Check if tag for release exists in registry
         uses: ./.github/actions/check-tag
         id: check-tag-release
@@ -55,8 +58,11 @@ jobs:
 
   build-release:
     needs: prepare
+    permissions:
+      contents: read
+      packages: write
     if: ${{ (github.event_name == 'push' || github.event.inputs.target == 'release') }}
-    uses: ./.github/workflows/bake.yml    
+    uses: ./.github/workflows/bake.yml
     secrets: inherit
     with:
       path: docker/lnd
@@ -64,8 +70,11 @@ jobs:
 
   build-nightly:
     needs: prepare
+    permissions:
+      contents: read
+      packages: write
     if: ${{ github.event.inputs.force || ((github.event_name == 'schedule' || github.event.inputs.target == 'nightly') && needs.prepare.outputs.tag-commit-exists == 'false') }}
-    uses: ./.github/workflows/bake.yml    
+    uses: ./.github/workflows/bake.yml
     secrets: inherit
     with:
       path: docker/lnd

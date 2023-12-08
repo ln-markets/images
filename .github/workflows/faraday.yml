@@ -13,10 +13,14 @@ on:
       - master
     paths:
       - docker/faraday/**
+      - .github/workflows/faraday.yml
 
 jobs:
   build:
-    uses: ./.github/workflows/bake.yml    
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/bake.yml
     secrets: inherit
     with:
       path: docker/faraday

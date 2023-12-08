@@ -23,6 +23,9 @@ on:
 
 jobs:
   build:
+    permissions:
+      contents: read
+      packages: write
     runs-on: ${{ inputs.runs-on }}
     steps:
       - name: Checkout
@@ -38,8 +41,8 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: vafanassieff
-          password: ${{ secrets.GHCR_TOKEN }}
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
 
       - name: Login to DockerHub
         uses: docker/login-action@v3
