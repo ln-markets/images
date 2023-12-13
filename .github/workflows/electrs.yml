@@ -1,0 +1,27 @@
+name: electrs
+
+on:
+  workflow_dispatch:
+    inputs:
+      force:
+        type: boolean
+        description: Force build
+        required: false
+        default: false
+  push:
+    branches:
+      - master
+    paths:
+      - docker/electrs/**
+      - .github/workflows/electrs.yml
+
+jobs:
+  build:
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/bake.yml
+    secrets: inherit
+    with:
+      path: docker/electrs
+      target: release
