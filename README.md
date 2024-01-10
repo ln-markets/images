@@ -39,6 +39,7 @@ Images are compiled and verified from the application github repository.
 | [Storm Store Daemon](https://github.com/STORM-WG/storm-stored)            | <img alt="Docker Image Version (tag latest semver)" src="https://img.shields.io/docker/v/lnmarkets/storm-stored/latest">       | <img alt="Docker Image Version (latest semver)" src="https://img.shields.io/docker/v/lnmarkets/storm-stored">   |
 | [nostr-rs-relay](https://github.com/scsibug/nostr-rs-relay)               | <img alt="Docker Image Version (tag latest semver)" src="https://img.shields.io/docker/v/lnmarkets/nostr-rs-relay/latest">     | None                                                                                                            |
 | [nostream](https://github.com/Cameri/nostream)                            | <img alt="Docker Image Version (tag latest semver)" src="https://img.shields.io/docker/v/lnmarkets/nostream/latest">           | None                                                                                                            |
+| [electrs](https://github.com/romanz/electrs)                              | <img alt="Docker Image Version (tag latest semver)" src="https://img.shields.io/docker/v/lnmarkets/electrs/latest">            | None                                                                                                            |
 
 ### CLI Tools
 

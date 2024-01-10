@@ -13,11 +13,11 @@ RUN apt update -qqy && \
 RUN git clone https://github.com/romanz/electrs.git && \
     cd electrs && \
     git checkout $VERSION && \
-    cargo build --release
+    cargo install --locked --path .
 
 FROM lnmarkets/debian:bookworm
 
-COPY --from=build /app/electrs/target/release/electrs /usr/bin/electrs
+COPY --from=build /usr/local/cargo/bin/electrs /usr/bin/electrs
 
 RUN apt update -qqy && \
     apt install -qqy librocksdb-dev
@@ -25,5 +25,3 @@ RUN apt update -qqy && \
 EXPOSE 50001 4224
 
 ENTRYPOINT [ "/docker/entrypoint.sh", "electrs"]
-
-CMD ["--help"]
