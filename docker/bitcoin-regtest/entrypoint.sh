@@ -6,7 +6,7 @@ set -e
 create_and_load_wallet() {
     # Sleep because we have to wait for bitcoind to start
     sleep 2
-    if [ ! -f /home/.bitcoin/regtest/wallets/satoshi/wallet.dat ]; then
+    if [ ! -d /home/.bitcoin/regtest/satoshi ]; then
         echo 'Create default wallet'
         bitcoin-cli -regtest createwallet satoshi
     fi
