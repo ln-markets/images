@@ -2,7 +2,7 @@
 
 set -e
 
-address=$(bitcoin-cli -regtest getnewaddress)
+address=$(bitcoin-cli -regtest -rpcwallet=satoshi getnewaddress)
 blocks=1
 
 print_usage() {
