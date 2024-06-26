@@ -20,7 +20,7 @@ on:
     paths:
       - docker/fork-observer/**
   schedule:
-    - cron: "0 8 * * *"
+    - cron: "0 8,20 * * *"
 
 jobs:
   prepare:
@@ -53,11 +53,10 @@ jobs:
     permissions:
       contents: read
       packages: write
-    if: ${{ (github.event_name == 'schedule' || github.event.inputs.target == 'nightly') && (github.event.inputs.force || needs.prepare.outputs.tag-commit-exists == 'false') }}
+    if: ${{ (github.event_name == 'push' || github.event_name == 'schedule' || github.event.inputs.target == 'nightly') && (github.event.inputs.force || needs.prepare.outputs.tag-commit-exists == 'false') }}
     uses: ./.github/workflows/bake.yml
     secrets: inherit
     with:
-      runs-on: self-hosted
       path: docker/fork-observer
       target: nightly
       commit: ${{ needs.prepare.outputs.commit }}
