@@ -1,0 +1,62 @@
+name: mempool-electrs
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        type: choice
+        description: Target
+        required: true
+        options:
+          - nightly
+      force:
+        type: boolean
+        description: Force build
+        required: false
+        default: false
+  push:
+    branches:
+      - master
+    paths:
+      - docker/mempool-electrs/**
+  schedule:
+    - cron: "0 8,20 * * *"
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      commit: ${{ steps.latest-commit.outputs.sha }}
+      tag-commit-exists: ${{ steps.check-tag-commit.outputs.exists }}
+      tag-release-exists: ${{ steps.check-tag-release.outputs.exists }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get latest commit
+        uses: ./.github/actions/latest-commit
+        id: latest-commit
+        with:
+          repo: mempool/electrs
+          branch: mempool
+
+      - name: Check if tag for latest commit exists in registry
+        uses: ./.github/actions/check-tag
+        id: check-tag-commit
+        with:
+          path: docker/mempool-electrs
+          tag: ${{ steps.latest-commit.outputs.sha-short }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  build-nightly:
+    needs: prepare
+    permissions:
+      contents: read
+      packages: write
+    if: ${{ (github.event_name == 'push' || github.event_name == 'schedule' || github.event.inputs.target == 'nightly') && (github.event.inputs.force || needs.prepare.outputs.tag-commit-exists == 'false') }}
+    uses: ./.github/workflows/bake.yml
+    secrets: inherit
+    with:
+      path: docker/mempool-electrs
+      target: nightly
+      commit: ${{ needs.prepare.outputs.commit }}
