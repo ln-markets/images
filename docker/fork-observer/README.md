@@ -30,5 +30,6 @@ volumes:
 ```toml
 # config.toml (only the relevant parts for this example)
 database_path = "/data/db"
+www_path = "/srv/fork-observer/www"
 address = "0.0.0.0:2323"
 ```
