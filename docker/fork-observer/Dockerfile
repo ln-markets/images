@@ -59,9 +59,14 @@ RUN cargo build --release --target-dir "${BUILDER_DIR}" --bins --all-features
 # Final image with binaries
 FROM lnmarkets/debian:bookworm as final
 
+ARG SRC_DIR
 ARG BUILDER_DIR
 
+# Copy binary
 COPY --from=builder --chown=satoshi:satoshi "${BUILDER_DIR}/release/fork-observer" /bin/
+
+# Copy static files
+COPY --from=repo --chown=satoshi:satoshi "${SRC_DIR}/www" "${BUILDER_DIR}/www"
 
 EXPOSE 2323
 
