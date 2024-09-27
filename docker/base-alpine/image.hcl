@@ -1,5 +1,5 @@
 # Release version
-VERSION="3.18"
+VERSION="3.20"
 
 # Image config
 NAME="base-alpine"
