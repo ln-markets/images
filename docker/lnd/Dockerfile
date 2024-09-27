@@ -25,7 +25,7 @@ RUN git clone https://github.com/lightningnetwork/lnd.git ${LND_PKG_DIR} && \
 
 RUN cd ${LND_PKG_DIR} && make install tags="${LND_BUILD_TAGS}"
 
-FROM lnmarkets/base-alpine:3.18
+FROM lnmarkets/base-alpine:3.20
 
 ENV DATA_PATH=/home/.lnd
 

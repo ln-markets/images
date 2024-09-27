@@ -19,7 +19,7 @@ RUN git clone https://github.com/lightninglabs/lndmon.git ${LNDMON_PKG_DIR} && \
 
 RUN cd ${LNDMON_PKG_DIR}/cmd/lndmon && go build
 
-FROM lnmarkets/base-alpine:3.18
+FROM lnmarkets/base-alpine:3.20
 
 COPY --from=builder /go/src/github.com/lightninglabs/lndmon/cmd/lndmon /bin/
 

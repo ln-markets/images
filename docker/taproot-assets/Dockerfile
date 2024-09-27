@@ -1,4 +1,4 @@
-FROM golang:1.21.4-alpine AS builder
+FROM golang:1.22.1-alpine AS builder
 
 ARG VERSION
 ARG COMMIT
@@ -17,7 +17,7 @@ RUN git clone https://github.com/lightninglabs/taproot-assets.git ${PKG_DIR} && 
 
 RUN cd ${PKG_DIR} && make release-install
 
-FROM lnmarkets/base-alpine:3.18
+FROM lnmarkets/base-alpine:3.20
 
 ENV DATA_PATH=/home/.tapd
 

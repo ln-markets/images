@@ -24,7 +24,7 @@ RUN gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys F4FC70F07310028424EF
 
 RUN cd ${FARADAY_PKG_DIR} && make install
 
-FROM lnmarkets/base-alpine:3.18
+FROM lnmarkets/base-alpine:3.20
 
 COPY --from=builder /go/bin/faraday /bin/
 COPY --from=builder /go/bin/frcli /bin/
