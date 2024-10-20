@@ -20,8 +20,6 @@ on:
       - master
     paths:
       - docker/lnpbp-tools/rgb-std/**
-  schedule:
-    - cron: "0 8,20 * * *"
 
 jobs:
   prepare:

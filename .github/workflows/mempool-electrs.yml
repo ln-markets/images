@@ -19,8 +19,6 @@ on:
       - master
     paths:
       - docker/mempool-electrs/**
-  schedule:
-    - cron: "0 8,20 * * *"
 
 jobs:
   prepare:

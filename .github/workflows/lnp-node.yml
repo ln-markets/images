@@ -20,8 +20,6 @@ on:
       - master
     paths:
       - docker/lnp-node/**
-  schedule:
-    - cron: "0 8,20 * * *"
 
 jobs:
   prepare:
