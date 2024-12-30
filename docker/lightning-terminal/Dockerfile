@@ -14,6 +14,8 @@ RUN gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys 187F6ADD93AE3B0CF335
 
 FROM node:20.9.0-alpine as node
 
+RUN apk add --no-cache --update git
+
 COPY --from=git /go/src/github.com/lightninglabs/lightning-terminal /go/src/github.com/lightninglabs/lightning-terminal
 
 RUN yarn config set registry "http://registry.npmjs.org" && \
@@ -22,7 +24,7 @@ RUN yarn config set registry "http://registry.npmjs.org" && \
     yarn install --frozen-lockfile && \
     yarn build
 
-FROM golang:1.22.4-alpine AS go
+FROM golang:1.22.6-alpine AS go
 
 ENV GODEBUG netdns=cgo
 
