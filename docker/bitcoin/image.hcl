@@ -1,4 +1,4 @@
 # Release version
-VERSION="27.1"
+VERSION="28.0"
 NAME="bitcoin"
 DESCRIPTION="Bitcoin Core"
